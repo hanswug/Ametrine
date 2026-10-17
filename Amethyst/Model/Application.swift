@@ -197,10 +197,12 @@ extension SIApplication: ApplicationType {
     }
 
     func observe(notification: String, handler: @escaping SIAXNotificationHandler) -> AXError {
+        usesApplicationCallback = true
         return observeNotification(notification as CFString, with: self, handler: handler)
     }
 
     func observe(notification: String, window: Window, handler: @escaping SIAXNotificationHandler) -> AXError {
+        usesApplicationCallback = true
         return observeNotification(notification as CFString, with: window, handler: handler)
     }
 

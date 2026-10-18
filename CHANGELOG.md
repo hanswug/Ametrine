@@ -6,6 +6,7 @@ Numbering started at 2.4.0 and was counted back to the fork's first build. Newes
 
 | Version | What |
 | ------- | ---- |
+| 6.5.4 | Fewer requests to other apps when listing a screen's windows: windows not on screen are skipped before their Space and frame are asked for, and the focused window is looked up once per layout pass instead of once per window. Measured: the time this takes per command fell by 46 % at the 95th percentile (21.8 → 11.8 ms); behaviour unchanged |
 | 6.5.3 | Menu bar counts read more easily: a space after the letter (`M: ●○ \| Tall Left`, `S: 4 \| Fullscreen`) |
 | 6.5.2 | Named Ametrine throughout: the Xcode project, module and executable (`Contents/MacOS/Ametrine`, so the debug command is now `…/MacOS/Ametrine debug windows`). Nothing to change in the config, and Accessibility stays granted (same bundle ID and certificate). Upstream fixes are now ported by hand |
 | 6.5.1 | Fixes ported from Amethyst: windows of apps that keep them alive after closing (Slack, Telegram) tile again when reopened; a tab brought to the front (Terminal and other apps with native tabs) keeps its tile instead of dropping out; dropping a dragged window swaps only with this Space's windows; a late Accessibility notification can no longer reach a released handler (a possible crash, Silica update) |

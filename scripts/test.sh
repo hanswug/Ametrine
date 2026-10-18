@@ -2,7 +2,7 @@
 #
 # Runs the unit tests (Debug, ad-hoc signed; no certificate needed).
 #
-# The test host is the Debug app, which loads the Amethyst config and persists
+# The test host is the Debug app, which loads the Ametrine config and persists
 # it into its preferences domain. Some layout tests assume the defaults (e.g.
 # no window margins), so run against an empty config and a clean domain to keep
 # results independent of this Mac's setup. Debug has its own bundle ID, so the

@@ -39,10 +39,9 @@ Time Profiler only samples threads that are **running**. When Amethyst waits on 
    - **High CPU in `activeWindows(onScreen:)` / `windowSet(forWindowsOnScreen:)`:** the per-reflow window filtering is the cost. That's a candidate for caching screen membership.
    - **Nothing in Amethyst:** look elsewhere (WindowServer, the app itself), e.g. Activity Monitor or Instruments "All Processes".
 3. Per-app notification count (only if step 2 points at a flood):
-   - Quit Ametrine and start it with logging, written to a file: `open --stdout build/profiles/amethyst.log --stderr build/profiles/amethyst.log -a /Applications/Ametrine.app --args test --log`. (A bare `--log` is rejected by the argument parser; `test` is the entry point that skips it. Launching through `open` keeps it a normal app launch; started directly from a terminal it may not pick up every app.)
+   - Quit Ametrine and start it with logging, written to a file: `open --stdout build/profiles/ametrine.log --stderr build/profiles/ametrine.log -a /Applications/Ametrine.app --args --log`. (Launching through `open` keeps it a normal app launch; started directly from a terminal it may not pick up every app.)
    - Reproduce, then count `Received notification for window:` lines grouped by window ID.
-   - Map the IDs to apps with the window list, e.g. `.../Contents/MacOS/Amethyst debug windows --include-unmanaged`.
-   - That CLI currently crashes; see below.
+   - Map the IDs to apps with the window list, e.g. `/Applications/Ametrine.app/Contents/MacOS/Ametrine debug windows --include-unmanaged`.
 
 In zsh, `log` is a shell built-in; use `/usr/bin/log` for macOS's unified log. Amethyst's own messages appear there redacted (`<private>`), hence the file above.
 

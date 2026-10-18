@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Records a Time Profiler trace of the running fork and prints a summary.
-# Run it when Amethyst feels slow, then keep using the Mac normally.
+# Run it when Ametrine feels slow, then keep using the Mac normally.
 #
 #   scripts/profile.sh [duration]     # duration as xctrace takes it; default 10m
 #
@@ -16,7 +16,7 @@ APP_PATH="/Applications/Ametrine.app"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT_DIR="${REPO_ROOT}/build/profiles"
 STAMP="$(date +%Y%m%d-%H%M%S)"
-TRACE="${OUT_DIR}/amethyst-${STAMP}.trace"
+TRACE="${OUT_DIR}/ametrine-${STAMP}.trace"
 
 PID="$(pgrep -f "${APP_PATH}/Contents/MacOS/Ametrine" | head -1 || true)"
 if [[ -z "$PID" ]]; then

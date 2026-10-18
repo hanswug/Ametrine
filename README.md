@@ -27,7 +27,7 @@ Built on [Amethyst](https://github.com/ianyh/Amethyst) by Ian Ynda-Hummel, for a
 - **Palette, shortcut sheet and URL:** every command searchable, your keys at a glance, `ametrine://` for scripts. → [Palette](docs/features.md#command-palette)
 - **Calm windows:** dialogs float, a window limit keeps tiles readable, windows snap back. → [Features](docs/features.md)
 - **Focus border:** a soft glow that follows the focused window. → [Focus border](docs/features.md#focus-border)
-- **Light on your other apps:** half as long waiting on them as the Amethyst code it came from, measured. → [Profiling](docs/PROFILING.md#phase-2-listing-a-screens-windows-2026-10-18)
+- **Light on your other apps.** Measured: listing windows waits on your apps half as long as the Amethyst code it came from, and a focus change asks them twice instead of about five times per open window. → [Profiling](docs/PROFILING.md)
 
 **Design principles:** main first · built for real work · by direction, not by order · keyboard first · no hidden state · workflows, not mechanics · no tricks · not an all-in-one. → [What each one means](docs/principles.md)
 

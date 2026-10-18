@@ -25,7 +25,7 @@ Built on [Amethyst](https://github.com/ianyh/Amethyst) by Ian Ynda-Hummel, for a
 - **Focus border:** a soft glow that follows the focused window. → [Focus border](docs/features.md#focus-border)
 - **Light on your other apps:** half as long waiting on them as the Amethyst code it came from, measured. → [Profiling](docs/PROFILING.md#phase-2-listing-a-screens-windows-2026-10-18)
 
-**Design principles:** main first · by direction, not by order · keyboard first · no hidden state · workflows, not mechanics · realistic · no tricks · not an all-in-one. → [What each one means](docs/principles.md)
+**Design principles:** main first · built for real work · by direction, not by order · keyboard first · no hidden state · workflows, not mechanics · no tricks · not an all-in-one. → [What each one means](docs/principles.md)
 
 ## Getting started
 

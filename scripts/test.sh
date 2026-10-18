@@ -2,13 +2,13 @@
 #
 # Runs the unit tests (Debug, ad-hoc signed; no certificate needed).
 #
-# The test host is the Debug app, which loads the Amethyst config and persists
+# The test host is the Debug app, which loads the Ametrine config and persists
 # it into its preferences domain. Some layout tests assume the defaults (e.g.
 # no window margins), so run against an empty config and a clean domain to keep
 # results independent of this Mac's setup. Debug has its own bundle ID, so the
 # installed Release app's preferences are never touched.
 #
-# Extra arguments go to xcodebuild, e.g. -only-testing:AmethystTests/TallLayoutTests
+# Extra arguments go to xcodebuild, e.g. -only-testing:AmetrineTests/TallLayoutTests
 
 set -euo pipefail
 
@@ -28,8 +28,8 @@ trap cleanup EXIT
 defaults delete "$TEST_HOST_BUNDLE_ID" >/dev/null 2>&1 || true
 
 TEST_RUNNER_XDG_CONFIG_HOME="$EMPTY_CONFIG_HOME" xcodebuild \
-    -workspace Amethyst.xcworkspace \
-    -scheme Amethyst \
+    -workspace Ametrine.xcworkspace \
+    -scheme Ametrine \
     -configuration Debug \
     -derivedDataPath build/DerivedData \
     -quiet \

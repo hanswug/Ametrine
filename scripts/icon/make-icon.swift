@@ -14,7 +14,7 @@
 //            writing the asset catalog
 //
 // Without --out it writes every size of AppIcon.appiconset and the layout
-// HUD's amethyst.imageset.
+// HUD's ametrine.imageset.
 
 import CoreGraphics
 import Foundation
@@ -75,7 +75,7 @@ while let argument = arguments.next() {
 
 let scriptDirectory = URL(fileURLWithPath: CommandLine.arguments[0]).deletingLastPathComponent()
 let repoRoot = scriptDirectory.deletingLastPathComponent().deletingLastPathComponent()
-let assets = repoRoot.appendingPathComponent("Amethyst/Images.xcassets")
+let assets = repoRoot.appendingPathComponent("Ametrine/Images.xcassets")
 
 func loadImage(_ url: URL) -> CGImage {
     guard let source = CGImageSourceCreateWithURL(url as CFURL, nil),
@@ -185,6 +185,6 @@ for size in [16, 32, 128, 256, 512] {
     write(scaled(icon, to: size), to: appIcon.appendingPathComponent("icon_\(size)x\(size).png"))
     write(scaled(icon, to: size * 2), to: appIcon.appendingPathComponent("icon_\(size)x\(size)@2x.png"))
 }
-let hudIcon = assets.appendingPathComponent("amethyst.imageset")
+let hudIcon = assets.appendingPathComponent("ametrine.imageset")
 write(scaled(icon, to: 32), to: hudIcon.appendingPathComponent("icon_32x32.png"))
 write(scaled(icon, to: 64), to: hudIcon.appendingPathComponent("icon_32x32@2x.png"))

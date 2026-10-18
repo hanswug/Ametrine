@@ -8,8 +8,8 @@ disabled_rules:
     - file_length
     - type_body_length
 included:
-    - Amethyst
-    - AmethystTests
+    - Ametrine
+    - AmetrineTests
 line_length:
     warning: 200
     ignores_comments: true

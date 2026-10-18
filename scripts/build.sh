@@ -18,7 +18,7 @@ DEPLOYMENT_TARGET="12.0"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DERIVED_DATA="${REPO_ROOT}/build/DerivedData"
-PRODUCT="${DERIVED_DATA}/Build/Products/Release/Amethyst.app"
+PRODUCT="${DERIVED_DATA}/Build/Products/Release/Ametrine.app"
 
 cd "$REPO_ROOT"
 
@@ -35,8 +35,8 @@ BUILD_NUMBER="$(git rev-list --count HEAD)"
 
 echo "==> Building Release (build ${BUILD_NUMBER})"
 xcodebuild \
-    -workspace Amethyst.xcworkspace \
-    -scheme Amethyst \
+    -workspace Ametrine.xcworkspace \
+    -scheme Ametrine \
     -configuration Release \
     -derivedDataPath "$DERIVED_DATA" \
     -quiet \

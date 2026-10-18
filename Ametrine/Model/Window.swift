@@ -1,0 +1,349 @@
+//
+//  Window.swift
+//  Ametrine
+//
+//  Created by Ian Ynda-Hummel on 3/10/19.
+//  Copyright © 2019 Ian Ynda-Hummel. All rights reserved.
+//
+
+import Foundation
+import Silica
+
+// swiftlint:disable identifier_name
+ @_silgen_name("GetProcessForPID") @discardableResult
+ func GetProcessForPID(_ pid: pid_t, _ psn: inout ProcessSerialNumber) -> OSStatus
+
+ @_silgen_name("_SLPSSetFrontProcessWithOptions") @discardableResult
+ func _SLPSSetFrontProcessWithOptions(_ psn: inout ProcessSerialNumber, _ wid: UInt32, _ mode: UInt32) -> CGError
+
+ @_silgen_name("SLPSPostEventRecordTo") @discardableResult
+ func SLPSPostEventRecordTo(_ psn: inout ProcessSerialNumber, _ bytes: inout UInt8) -> CGError
+
+ let kCPSUserGenerated: UInt32 = 0x200
+// swiftlint:enable identifier_name
+
+/// Generic protocol for objects acting as windows in the system.
+protocol WindowType: Equatable {
+    associatedtype Screen: ScreenType
+    associatedtype WindowID: Codable, Hashable
+
+    /// Returns the currently focused window of its type.
+    static func currentlyFocused() -> Self?
+
+    /**
+     Attempt to initialize a window based on a Silica element.
+     
+     Many of the accessibility APIs handle elements directly, so we need a way to convert those elements into a general window type. This is not necessarily meaningful in all cases — tests, for example, may provide window types that do not correspond to actual elements.
+     
+     - Parameters:
+        - element: The element representing a window.
+     */
+    init?(element: SIAccessibilityElement?)
+
+    /// Returns an opaque unique identifier for the window.
+    func id() -> WindowID
+
+    /// Returns the window's ID in the underlying window system.
+    func cgID() -> CGWindowID
+
+    /// Returns the window's current frame.
+    func frame() -> CGRect
+
+    /// Returns the screen, if any, that the window is currently on.
+    func screen() -> Screen?
+
+    /**
+     Sets the frame of the window with an error threshold for what constitutes a new frame.
+     
+     The tolerance for error is necessary as for performance reasons we avoid performing unnecessary frame assignments, but some windows (e.g., Terminal's windows) have some constraints on their size such that `frame` and `window.frame()` will differ by some small amount even if `frame` has been applied before. We want to treat that frame as equivalent if it is close enough so that we get the performance benefit.
+     
+     - Parameters:
+         - frame: The frame to apply.
+         - threshold: The error tolerance for what constitutes a new frame.
+     */
+
+    func setFrame(_ frame: CGRect, withThreshold threshold: CGSize)
+
+    /// Whether or not the window is currently holding focus.
+    func isFocused() -> Bool
+
+    /// The process ID of the process that owns the window.
+    func pid() -> pid_t
+
+    /**
+     The title of the window.
+     
+     - Note: Windows do not necessarily have titles so this can be `nil`.
+     */
+    func title() -> String?
+
+    /// Whether or not the window should actually be managed by Ametrine.
+    func shouldBeManaged() -> Bool
+
+    /// Whether or not the window should float by default.
+    func shouldFloat() -> Bool
+
+    /// Whether or not the window is currently active.
+    func isActive() -> Bool
+
+    /**
+     Focuses the window.
+     
+     - Returns:
+     `true` if the window was successfully focused, `false` otherwise.
+     */
+    @discardableResult func focus() -> Bool
+
+    @discardableResult func minimize() -> Bool
+
+    /// Whether or not the window is currently on any screen.
+    func isOnScreen() -> Bool
+}
+
+enum WindowDecodingError: Error {
+    case idNotFound
+}
+
+/**
+ Final subclass of the Silica `SIWindow`.
+ 
+ A final class is necessary for satisfying the `focusedWindow()` requirement in the `WindowType` protocol. Otherwise, as `SIWindow` is not final, the type system does not know how to constrain `Self`.
+ */
+final class AXWindow: SIWindow {}
+
+/**
+ Identifier for `AXWindow` objects.
+ 
+ - Note:
+ Decoding for this object is very inefficient. Use it sparingly.
+ */
+final class AXWindowID: Hashable, Codable {
+    /// Coding keys.
+    private enum CodingKeys: String, CodingKey {
+        /// The pid of the process that owns the window.
+        case pid
+
+        /// The CoreGraphics id for the window.
+        case windowID
+    }
+
+    private let window: AXWindow
+    private let pid: pid_t
+    private let windowID: CGWindowID
+
+    /// Equality for window IDs is based on the underlying CoreGraphics id and the owning pid, which (mostly) uniquely identifies a window.
+    static func == (lhs: AXWindowID, rhs: AXWindowID) -> Bool {
+        return lhs.pid == rhs.pid && lhs.windowID == rhs.windowID
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(pid)
+        hasher.combine(windowID)
+    }
+
+    fileprivate init(window: AXWindow) {
+        self.window = window
+        self.pid = window.pid()
+        self.windowID = window.windowID()
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let pid = try container.decode(pid_t.self, forKey: .pid)
+        let windowID = try container.decode(CGWindowID.self, forKey: .windowID)
+
+        guard let application = SIApplication(pid: pid) else {
+            throw WindowDecodingError.idNotFound
+        }
+
+        let windows: [SIWindow] = application.windows()
+
+        guard let window = windows.first(where: { $0.windowID() == windowID }) else {
+            throw WindowDecodingError.idNotFound
+        }
+
+        self.window = AXWindow(axElement: window.axElementRef)
+        self.pid = pid
+        self.windowID = windowID
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(pid, forKey: .pid)
+        try container.encode(windowID, forKey: .windowID)
+    }
+}
+
+extension AXWindowID: CustomStringConvertible {
+    var description: String {
+        return "\(window.title() ?? "unknown") (\(window.windowID()))"
+    }
+}
+
+/// Conformance of `AXWindow` as an Ametrine window.
+extension AXWindow: WindowType {
+    typealias Screen = AMScreen
+    typealias WindowID = AXWindowID
+
+    /**
+     Returns the currently focused window.
+     
+     - Returns:
+     The currently focused window as an `AXWindow`.
+     */
+    static func currentlyFocused() -> AXWindow? {
+        return SIWindow.focused().flatMap { AXWindow(axElement: $0.axElementRef) }
+    }
+
+    /**
+     The Silica initializer is not failable because it can always assume it has a reference to an ax element. The window type in general does not make that assumption and thus has a failable initializer. This just ports one into the other.
+     
+     - Parameters:
+        - element: The element representing a window.
+     */
+    convenience init?(element: SIAccessibilityElement?) {
+        guard let axElementRef = element?.axElementRef else {
+            return nil
+        }
+
+        self.init(axElement: axElementRef)
+
+        if string(forKey: "AXRole" as CFString) != "AXWindow" {
+            return nil
+        }
+    }
+
+    func id() -> WindowID {
+        return AXWindowID(window: self)
+    }
+
+    func cgID() -> CGWindowID {
+        return windowID()
+    }
+
+    func screen() -> AMScreen? {
+        let nsScreen: NSScreen? = screen()
+        return nsScreen.flatMap { AMScreen(screen: $0) }
+    }
+
+    func pid() -> pid_t {
+        // Some window operations can surface elements owned by a helper process.
+        // Use AXParent's PID when available so identity checks stay stable.
+        return forKey("AXParent" as CFString)?.processIdentifier() ?? processIdentifier()
+    }
+
+    /**
+     Whether or not the window should actually be managed by Ametrine.
+     
+     In this case the window must be movable and be a standard window.
+     */
+    func shouldBeManaged() -> Bool {
+        guard isMovable() else {
+            return false
+        }
+
+        guard let subrole = string(forKey: kAXSubroleAttribute as CFString), subrole == kAXStandardWindowSubrole as String else {
+            return false
+        }
+
+        return true
+    }
+
+    func shouldFloat() -> Bool {
+        let userConfiguration = UserConfiguration.shared
+        let frame = self.frame()
+        let threshold = userConfiguration.smallWindowSize()
+
+        if userConfiguration.floatSmallWindows() && frame.size.width < threshold && frame.size.height < threshold {
+            return true
+        }
+
+        return false
+    }
+
+    func isFocused() -> Bool {
+        guard let focused = AXWindow.currentlyFocused() else {
+            return false
+        }
+
+        return isEqual(to: focused)
+    }
+
+    /**
+     Focuses the window.
+     
+     This handles focusing and also moves the cursor to the window's frame if mouse-follows-focus is enabled.
+     
+     - Returns:
+     `true` if the window was successfully focused, `false` otherwise.
+     
+     - Description:
+     What a mess. See: https://github.com/Hammerspoon/hammerspoon/issues/370#issuecomment-545545468
+     */
+    @discardableResult override func focus() -> Bool {
+        let pid = self.pid()
+        var wid = self.cgID()
+        var psn = ProcessSerialNumber()
+        let status = GetProcessForPID(pid, &psn)
+
+        guard status == noErr else {
+            return false
+        }
+
+        var cgStatus = _SLPSSetFrontProcessWithOptions(&psn, wid, kCPSUserGenerated)
+
+        guard cgStatus == .success else {
+            return false
+        }
+
+        for byte in [0x01, 0x02] {
+            var bytes = [UInt8](repeating: 0, count: 0xf8)
+            bytes[0x04] = 0xF8
+            bytes[0x08] = UInt8(byte)
+            bytes[0x3a] = 0x10
+            memcpy(&bytes[0x3c], &wid, MemoryLayout<UInt32>.size)
+            memset(&bytes[0x20], 0xFF, 0x10)
+            cgStatus = bytes.withUnsafeMutableBufferPointer { pointer in
+                return SLPSPostEventRecordTo(&psn, &pointer.baseAddress!.pointee)
+            }
+            guard cgStatus == .success else {
+                return false
+            }
+        }
+
+        guard super.raise() else {
+            return false
+        }
+
+        guard UserConfiguration.shared.mouseFollowsFocus() else {
+            return true
+        }
+
+        let windowFrame = frame()
+        Cursor.move(to: CGPoint(x: windowFrame.midX, y: windowFrame.midY))
+
+        return true
+    }
+
+    @discardableResult func minimize() -> Bool {
+        super.minimize()
+        return isWindowMinimized()
+    }
+}
+
+extension AXWindow {
+    override var description: String {
+        return "\(super.description) (\(cgID()))"
+    }
+}
+
+enum Cursor {
+    /// Moves the mouse cursor to a point in screen coordinates (origin at the top left).
+    static func move(to point: CGPoint) {
+        guard let mouseMoveEvent = CGEvent(mouseEventSource: nil, mouseType: .mouseMoved, mouseCursorPosition: point, mouseButton: .left) else {
+            return
+        }
+        mouseMoveEvent.flags = CGEventFlags(rawValue: 0)
+        mouseMoveEvent.post(tap: CGEventTapLocation.cghidEventTap)
+    }
+}

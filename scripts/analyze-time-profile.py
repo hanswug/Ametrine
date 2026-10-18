@@ -78,7 +78,7 @@ def main():
                 continue
             seen.add(name)
             incl_any[name] += ns
-            if binary == "Amethyst":
+            if binary == "Ametrine":
                 incl_app[name] += ns
 
     ms = lambda ns: ns / 1e6
@@ -99,7 +99,7 @@ def main():
     print("\n== top self time (leaf frames) ==")
     for k, v in self_time.most_common(25):
         print(f"{ms(v):9.0f} ms  {100*v/total:5.1f}%  {k[:150]}")
-    print("\n== top inclusive, Amethyst code ==")
+    print("\n== top inclusive, Ametrine code ==")
     for k, v in incl_app.most_common(40):
         print(f"{ms(v):9.0f} ms  {100*v/total:5.1f}%  {k[:150]}")
     print("\n== top inclusive, any frame ==")

@@ -23,8 +23,6 @@ class FocusFollowsMouseManager<Delegate: FocusFollowsMouseManagerDelegate> {
 
     weak var delegate: Delegate?
 
-    private var lastMouseFocusTime = Date.distantPast
-
     private let userConfiguration: UserConfiguration
     private let disposeBag = DisposeBag()
 
@@ -78,12 +76,6 @@ class FocusFollowsMouseManager<Delegate: FocusFollowsMouseManagerDelegate> {
             return
         }
 
-        self.lastMouseFocusTime = Date()
-
         topWindow.focus()
-    }
-
-    func recentlyTriggeredFocusFollowsMouse() -> Bool {
-        return Date().timeIntervalSince(lastMouseFocusTime) < 0.5
     }
 }

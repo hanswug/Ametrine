@@ -189,10 +189,6 @@ class FocusTransitionCoordinator<Target: FocusTransitionTarget> {
         // Otherwise focus the topmost window
         target?.executeTransition(.focusWindow(topWindow))
     }
-
-    func recentlyTriggeredFocusFollowsMouse() -> Bool {
-        return focusFollowsMouseManager.recentlyTriggeredFocusFollowsMouse()
-    }
 }
 
 extension FocusTransitionCoordinator: FocusFollowsMouseManagerDelegate {

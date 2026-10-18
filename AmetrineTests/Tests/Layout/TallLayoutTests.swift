@@ -27,15 +27,7 @@ class TallLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = TallLayout<TestWindow>()
                 let frameAssignments = layout.frameAssignments(windowSet, on: screen)!
 
@@ -62,15 +54,7 @@ class TallLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = TallLayout<TestWindow>()
                 let frameAssignments = layout.frameAssignments(windowSet, on: screen)!
 
@@ -98,15 +82,7 @@ class TallLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = TallLayout<TestWindow>()
 
                 expect(layout.mainPaneCount).to(equal(1))
@@ -169,15 +145,7 @@ class TallLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = TallLayout<TestWindow>()
 
                 expect(layout.mainPaneCount).to(equal(1))
@@ -269,15 +237,6 @@ class TallLayoutTests: QuickSpec {
         }
 
         describe("stored pane sizes") {
-            func windowSet(_ windows: [TestWindow]) -> WindowSet<TestWindow> {
-                return WindowSet<TestWindow>(
-                    windows: windows.map { LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false) },
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
-            }
-
             it("raising the maximum moves nothing") {
                 let screen = TestScreen(frame: CGRect(origin: .zero, size: CGSize(width: 2000, height: 1000)))
                 TestScreen.availableScreens = [screen]
@@ -290,7 +249,7 @@ class TallLayoutTests: QuickSpec {
 
                 expect(layout.paneCounts.counts).to(equal([1, 2]))
                 expect(layout.mainPaneCountDescription).to(equal("1 of 2"))
-                layout.frameAssignments(windowSet(windows), on: screen)!.forWindows(windows[..<1]).verify(frames: [
+                layout.frameAssignments(WindowSet.tiled(windows), on: screen)!.forWindows(windows[..<1]).verify(frames: [
                     CGRect(origin: .zero, size: CGSize(width: 1000, height: 1000))
                 ])
             }
@@ -309,7 +268,7 @@ class TallLayoutTests: QuickSpec {
                 expect(layout.mainPaneCount).to(equal(2))
 
                 let warped = [windows[0], windows[2], windows[1]]
-                let assignments = layout.frameAssignments(windowSet(warped), on: screen)!
+                let assignments = layout.frameAssignments(WindowSet.tiled(warped), on: screen)!
                 assignments.forWindows(warped[..<2]).verify(frames: [
                     CGRect(x: 0, y: 0, width: 1000, height: 500),
                     CGRect(x: 0, y: 500, width: 1000, height: 500)

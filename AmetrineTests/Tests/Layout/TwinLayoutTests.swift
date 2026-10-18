@@ -11,12 +11,7 @@ import Quick
 import Silica
 
 private func frames(of windows: [TestWindow], in layout: Layout<TestWindow>, on screen: TestScreen) -> [String: CGRect] {
-    let windowSet = WindowSet<TestWindow>(
-        windows: windows.map { LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false) },
-        isWindowWithIDActive: { _ in return true },
-        isWindowWithIDFloating: { _ in return false },
-        windowForID: { id in return windows.first { $0.id() == id } }
-    )
+    let windowSet = WindowSet.tiled(windows)
     let assignments = layout.frameAssignments(windowSet, on: screen)!
     return Dictionary(uniqueKeysWithValues: assignments.map { ($0.frameAssignment.window.id, $0.frameAssignment.frame) })
 }
@@ -40,12 +35,7 @@ class TwinLayoutTests: QuickSpec {
 
         func frames(_ layout: Layout<TestWindow>, windowCount: Int, on screen: TestScreen) -> [CGRect] {
             let windows = (0..<windowCount).map { _ in TestWindow(element: nil)! }
-            let windowSet = WindowSet<TestWindow>(
-                windows: windows.map { LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false) },
-                isWindowWithIDActive: { _ in return true },
-                isWindowWithIDFloating: { _ in return false },
-                windowForID: { id in return windows.first { $0.id() == id } }
-            )
+            let windowSet = WindowSet.tiled(windows)
             let assignments = layout.frameAssignments(windowSet, on: screen)!
             return windows.map { window in assignments.first { $0.frameAssignment.window.id == window.id() }!.frameAssignment.frame }
         }
@@ -301,7 +291,7 @@ class TwinLayoutTests: QuickSpec {
 
             it("has display names that say where main is") {
                 let names = ["tall-left", "wide-bottom", "two-pane-b", "3column-middle", "widescreen-tall-left", "column-right", "row-top"]
-                    .map { LayoutType<TestWindow>.layoutNameForKey($0) }
+                    .map { LayoutType<TestWindow>.from(key: $0)?.layoutClass.layoutName }
 
                 expect(names).to(equal(["Tall Left", "Wide Bottom", "Two Pane B", "3Column Middle", "Widescreen Tall Left", "Column Right", "Row Top"]))
             }
@@ -309,8 +299,7 @@ class TwinLayoutTests: QuickSpec {
             it("knows no layout outside the built-in ones") {
                 expect(LayoutType<TestWindow>.from(key: "my-layout")).to(beNil())
                 expect(LayoutType<TestWindow>.layoutForKey("my-layout")).to(beNil())
-                expect(LayoutType<TestWindow>.layoutNameForKey("my-layout")).to(beNil())
-            }
+                            }
 
             it("no longer knows the old keys") {
                 for oldKey in ["tall", "wide", "two-pane", "two-pane-right", "middle-wide", "widescreen-tall", "column", "row"] {

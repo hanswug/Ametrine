@@ -78,9 +78,9 @@ class ScreenManagerTests: QuickSpec {
 
             it("decodes layouts") {
                 let configuration = UserConfiguration(storage: TestConfigurationStorage())
-                configuration.setLayoutKeys(LayoutType<TestWindow>.standardLayoutClasses().map { $0.layoutKey })
+                configuration.setLayoutKeys(LayoutType<TestWindow>.standardLayouts.map { $0.layoutClass.layoutKey })
 
-                let layouts = LayoutType<TestWindow>.standardLayoutClasses().map { $0.init() }
+                let layouts = LayoutType<TestWindow>.standardLayouts.map { $0.layoutClass.init() }
                 let encoder = JSONEncoder()
                 let encodedLayouts = layouts.map { ["key": $0.layoutKey.data(using: .utf8)!, "data": try! encoder.encode($0)] }
                 let decodedLayouts = try! ScreenManager<TestDelegate>.decodedLayouts(from: encodedLayouts, userConfiguration: configuration)

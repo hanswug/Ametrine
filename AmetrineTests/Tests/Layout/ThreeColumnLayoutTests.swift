@@ -18,87 +18,31 @@ class ThreeColumnLayoutTests: QuickSpec {
         }
 
         describe("TriplePaneArrangement") {
-            describe("pane counts") {
-                it("takes windows in main pane up to provided count") {
-                    let mainPaneCount: UInt = 2
-                    let screenSize = CGSize(width: 2000, height: 1000)
-                    let count: (UInt) -> UInt = { windowCount -> UInt in
-                        return TriplePaneArrangement(
-                            mainPane: .left,
-                            numWindows: windowCount,
-                            numMainPane: mainPaneCount,
-                            screenSize: screenSize,
-                            mainPaneRatio: 0.5
-                        ).count(.main)
-                    }
-
-                    expect(count(1)).to(equal(1))
-                    expect(count(2)).to(equal(2))
-                    expect(count(4)).to(equal(2))
-                }
-
-                it("splits non-main windows between two panes") {
-                    let mainPaneCount: UInt = 0
-                    let screenSize = CGSize(width: 2000, height: 1000)
-                    let secondaryCount: (UInt) -> UInt = { windowCount -> UInt in
-                        return TriplePaneArrangement(
-                            mainPane: .left,
-                            numWindows: windowCount,
-                            numMainPane: mainPaneCount,
-                            screenSize: screenSize,
-                            mainPaneRatio: 0.5
-                        ).count(.secondary)
-                    }
-                    let tertiaryCount: (UInt) -> UInt = { windowCount -> UInt in
-                        return TriplePaneArrangement(
-                            mainPane: .left,
-                            numWindows: windowCount,
-                            numMainPane: mainPaneCount,
-                            screenSize: screenSize,
-                            mainPaneRatio: 0.5
-                        ).count(.tertiary)
-                    }
-
-                    expect(secondaryCount(1)).to(equal(1))
-                    expect(secondaryCount(2)).to(equal(1))
-                    expect(secondaryCount(3)).to(equal(2))
-                    expect(secondaryCount(4)).to(equal(2))
-
-                    expect(tertiaryCount(1)).to(equal(0))
-                    expect(tertiaryCount(2)).to(equal(1))
-                    expect(tertiaryCount(3)).to(equal(1))
-                    expect(tertiaryCount(4)).to(equal(2))
-                }
-            }
-
             it("splits panes into rows") {
-                let mainPaneCount: UInt = 2
                 let screenSize = CGSize(width: 2000, height: 1000)
-                let height: (UInt, Pane) -> CGFloat = { windowCount, pane -> CGFloat in
-                    return TriplePaneArrangement(
-                        mainPane: .left,
-                        numWindows: windowCount,
-                        numMainPane: mainPaneCount,
-                        screenSize: screenSize,
-                        mainPaneRatio: 0.5
-                    ).height(pane)
+                let height: ([UInt], Pane) -> CGFloat = { counts, pane -> CGFloat in
+                    return TriplePaneArrangement(mainPane: .left, counts: counts, screenSize: screenSize, mainPaneRatio: 0.5).height(pane)
                 }
 
-                expect(height(1, .main)).to(equal(1000))
-                expect(height(2, .main)).to(equal(500))
-                expect(height(3, .main)).to(equal(500))
-                expect(height(1, .secondary)).to(equal(0))
-                expect(height(2, .secondary)).to(equal(0))
-                expect(height(3, .secondary)).to(equal(1000))
-                expect(height(4, .secondary)).to(equal(1000))
-                expect(height(5, .secondary)).to(equal(500))
-                expect(height(6, .secondary)).to(equal(500))
-                expect(height(1, .tertiary)).to(equal(0))
-                expect(height(2, .tertiary)).to(equal(0))
-                expect(height(3, .tertiary)).to(equal(0))
-                expect(height(4, .tertiary)).to(equal(1000))
-                expect(height(5, .tertiary)).to(equal(1000))
-                expect(height(6, .tertiary)).to(equal(500))
+                // 1 to 6 windows with a main maximum of 2: main, secondary, tertiary.
+                let one: [UInt] = [1, 0, 0], two: [UInt] = [2, 0, 0], three: [UInt] = [2, 1, 0]
+                let four: [UInt] = [2, 1, 1], five: [UInt] = [2, 2, 1], six: [UInt] = [2, 2, 2]
+
+                expect(height(one, .main)).to(equal(1000))
+                expect(height(two, .main)).to(equal(500))
+                expect(height(three, .main)).to(equal(500))
+                expect(height(one, .secondary)).to(equal(0))
+                expect(height(two, .secondary)).to(equal(0))
+                expect(height(three, .secondary)).to(equal(1000))
+                expect(height(four, .secondary)).to(equal(1000))
+                expect(height(five, .secondary)).to(equal(500))
+                expect(height(six, .secondary)).to(equal(500))
+                expect(height(one, .tertiary)).to(equal(0))
+                expect(height(two, .tertiary)).to(equal(0))
+                expect(height(three, .tertiary)).to(equal(0))
+                expect(height(four, .tertiary)).to(equal(1000))
+                expect(height(five, .tertiary)).to(equal(1000))
+                expect(height(six, .tertiary)).to(equal(500))
             }
         }
 
@@ -112,15 +56,7 @@ class ThreeColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ThreeColumnMiddleLayout<TestWindow>()
                 let frameAssignments = layout.frameAssignments(windowSet, on: screen)!
 
@@ -147,15 +83,7 @@ class ThreeColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ThreeColumnMiddleLayout<TestWindow>()
                 let frameAssignments = layout.frameAssignments(windowSet, on: screen)!
 
@@ -183,15 +111,7 @@ class ThreeColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ThreeColumnMiddleLayout<TestWindow>()
 
                 expect(layout.mainPaneCount).to(equal(1))
@@ -254,15 +174,7 @@ class ThreeColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ThreeColumnMiddleLayout<TestWindow>()
 
                 expect(layout.mainPaneCount).to(equal(1))
@@ -341,15 +253,7 @@ class ThreeColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ThreeColumnLeftLayout<TestWindow>()
                 let frameAssignments = layout.frameAssignments(windowSet, on: screen)!
 
@@ -376,15 +280,7 @@ class ThreeColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ThreeColumnLeftLayout<TestWindow>()
                 let frameAssignments = layout.frameAssignments(windowSet, on: screen)!
 
@@ -412,15 +308,7 @@ class ThreeColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ThreeColumnLeftLayout<TestWindow>()
 
                 expect(layout.mainPaneCount).to(equal(1))
@@ -483,15 +371,7 @@ class ThreeColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ThreeColumnLeftLayout<TestWindow>()
 
                 expect(layout.mainPaneCount).to(equal(1))
@@ -570,15 +450,7 @@ class ThreeColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ThreeColumnRightLayout<TestWindow>()
                 let frameAssignments = layout.frameAssignments(windowSet, on: screen)!
 
@@ -605,15 +477,7 @@ class ThreeColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ThreeColumnRightLayout<TestWindow>()
                 let frameAssignments = layout.frameAssignments(windowSet, on: screen)!
 
@@ -641,15 +505,7 @@ class ThreeColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ThreeColumnRightLayout<TestWindow>()
 
                 expect(layout.mainPaneCount).to(equal(1))
@@ -712,15 +568,7 @@ class ThreeColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ThreeColumnRightLayout<TestWindow>()
 
                 expect(layout.mainPaneCount).to(equal(1))

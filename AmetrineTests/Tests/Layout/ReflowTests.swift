@@ -48,12 +48,7 @@ class ReflowTests: QuickSpec {
                 defer { TestScreen.availableScreens = [] }
 
                 let windows = [TestWindow(element: nil)!, TestWindow(element: nil)!]
-                let windowSet = WindowSet<TestWindow>(
-                    windows: windows.map { LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false) },
-                    isWindowWithIDActive: { _ in true },
-                    isWindowWithIDFloating: { _ in false },
-                    windowForID: { id in windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = TallLayout<TestWindow>()
                 layout.recommendMainPaneRatio(1)
 

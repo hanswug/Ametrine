@@ -200,9 +200,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItemImage?.isTemplate = true
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem?.image = statusItemImage
+        statusItem?.button?.image = statusItemImage
         statusItem?.menu = statusItemMenu
-        statusItem?.highlightMode = true
 
         let hideMenuBarIcon: Bool = UserConfiguration.shared.hideMenuBarIcon()
         statusItem?.isVisible = !hideMenuBarIcon
@@ -393,7 +392,7 @@ extension AppDelegate: UserConfigurationDelegate {
             toggleGlobalTilingMenuItem?.title = "Enable Tiling"
         }
         statusItemImage?.isTemplate = true
-        statusItem?.image = statusItemImage
+        statusItem?.button?.image = statusItemImage
     }
 
     func configurationAccessibilityPermissionsDidChange(_ userConfiguration: UserConfiguration) {

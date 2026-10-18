@@ -417,7 +417,7 @@ extension WindowManager {
             state: windows.isWindowFloating(window) ? .floating : .tiled,
             reason: windows.placementReason(for: window)
         )
-        input.floatingIsAllowList = !userConfiguration.floatingBundleIdentifiersIsBlacklist()
+        input.floatingIsAllowList = !userConfiguration.floatingBundleIdentifiersIsBlocklist()
         input.tilingEnabled = userConfiguration.tilingEnabled
         input.isSecondaryWindowAnchor = windows.secondaryWindowAnchors.slot(anchoredBy: window.id()) != nil
         input.windowMaxCount = userConfiguration.windowMaxCount()
@@ -656,7 +656,7 @@ extension WindowManager {
         windows.setFloating(floating, forWindow: window, reason: reason)
 
         let applicationName = NSRunningApplication(processIdentifier: window.pid())?.localizedName ?? "pid \(window.pid())"
-        let reasonText = WindowExplanation.reasonText(reason, floating: floating, allowList: !userConfiguration.floatingBundleIdentifiersIsBlacklist())
+        let reasonText = WindowExplanation.reasonText(reason, floating: floating, allowList: !userConfiguration.floatingBundleIdentifiersIsBlocklist())
         log.info("\(floating ? "Floating" : "Tiled"): \(applicationName) \"\(window.title() ?? "")\" · \(reasonText)")
     }
 

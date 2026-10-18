@@ -1,15 +1,22 @@
 # Ametrine
 
-A tiling window manager for macOS, built on [Amethyst](https://github.com/ianyh/Amethyst) by Ian Ynda-Hummel, and designed around the **main pane**: the window you're working in gets the big tile, and everything else lines up beside it.
+A tiling window manager for macOS, designed around the **main pane**: the window you're working in gets the big tile, and everything else lines up beside it.
 
-It was born out of the need to handle many windows on large displays, such as a 4K 55" screen or an ultrawide, and to stay simple on a standard one, a single 27" 5K or a laptop's built-in display, where a full-screen stack or two panes side by side is all it takes. That range is where its flexibility comes from: the same setup works from a huge display to a standard one, and padding modes can even make the huge one behave like a smaller screen.
+**Move what you see, in the direction you see it.** h/j/k/l focuses the window to the west, south, north or east (or the arrow keys, if Vim keys aren't yours); with another modifier the focused window swaps or warps there. What's on your left is one key to the left: no clockwise order to keep in your head, no Alt-Tab.
+
+**See the layout's state instead of guessing it.** The menu bar shows the layout and what it can't show by itself: `M:●○ | Tall Left` is one window in main and room for the next, `S:4 | Fullscreen` is four windows in the stack. And any window can tell you why it tiles or floats.
+
+**One documented file instead of settings windows.** Every setting and every command sits in a single config, each with its options and default, and this repo documents the rest. Nothing hides in preference panes, and nothing is left over from an earlier setup.
+
+Ametrine is built on [Amethyst](https://github.com/ianyh/Amethyst) by Ian Ynda-Hummel. It was born out of the need to handle many windows on large displays, such as a 4K 55" screen or an ultrawide, and to stay simple on a standard one, a single 27" 5K or a laptop's built-in display, where a full-screen stack or two panes side by side is all it takes. That range is where its flexibility comes from: the same setup works from a huge display to a standard one, and padding modes can even make the huge one behave like a smaller screen.
 
 > **There are no public releases.** Builds are signed with a self-signed certificate, not notarised (that needs a paid Apple Developer ID). You can [build it yourself](#getting-started) in a few minutes.
 
 ## Highlights
 
 - **Layouts built around main.** Tall, Wide, Two Pane, 3Column, 4Column, Widescreen Tall, Column, Row, Fullscreen, Floating and BSP, each named by where main is, and each with a mirror-image twin. → [Layouts](docs/layouts.md)
-- **Move by direction.** h/j/k/l with one modifier focuses the window to the west, south, north or east; with another the window warps or swaps there. → [Directional focus, swap and warp](docs/directional-navigation.md)
+- **Move by direction.** h/j/k/l (or the arrow keys) with one modifier focuses the window to the west, south, north or east; with another the window warps or swaps there. → [Directional focus, swap and warp](docs/directional-navigation.md)
+- **Layout state in the menu bar.** Main's places as dots (`M:●○`, filled for a window, open for room) and the stack's size in Fullscreen and Two Pane (`S:4`), before the layout's name. → [Feedback](docs/features.md#feedback)
 - **Flip.** Mirror the layout, or reverse the rows or columns, to bring the windows at the far end closer. → [Flip](docs/layouts.md#flip)
 - **Padding modes.** Virtual monitors on a big display, such as a centred 27" or a 21:9 strip, picked per Space. → [Padding modes](docs/features.md#padding-modes)
 - **Command palette and URL.** Every command, searchable, with its key; and `ametrine://command/<key>` for scripts and launchers. → [Palette](docs/features.md#command-palette)
@@ -24,6 +31,9 @@ It was born out of the need to handle many windows on large displays, such as a 
 - **By direction, not by order.** You reach the window next to you, not the next one in a list. No clockwise order to remember, no Alt-Tab.
 - **Keyboard first.** Every command can have a key, and the palette shows them all while you build the muscle memory.
 - **No hidden state.** A window is either visible or deliberately gone; nothing is parked where you have to remember it.
+- **Workflows, not mechanics.** Features exist for a way of working, not to show off a tiling algorithm. BSP is there, but main is the centre.
+- **Realistic.** A screen holds the windows you can work with. More is a sign to close or float something: the window limit and the counts in the menu bar help you see when that happens.
+- **No tricks.** Ametrine does what macOS allows: no System Integrity Protection changes, nothing injected into the Dock or other apps. Where macOS has no public API that works, Ametrine uses private calls the way other window managers do, for three things only: reading what the public API doesn't tell (which Space a window is on, a window's shape and moves for the focus border), drawing its own windows (the border), and focusing the window you asked for.
 - **Not an all-in-one.** Ametrine tiles, and leaves the rest to apps that do it well. Each display and each Space is tiled on its own, with no commands to move windows between them (macOS has no public API for moving a window to another Space), and free-floating windows are placed by a window mover such as Raycast.
 
 ## Getting started

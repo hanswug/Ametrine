@@ -45,6 +45,18 @@ Question (code audit, C1/C2): is `activeWindows(onScreen:)` worth making cheaper
 
 **What's left:** a focus key takes about 18–36 ms in total, mostly the focusing itself (bringing the app forward, moving the cursor), not listing windows. Nothing here is noticeable; the gain is fewer requests to other apps.
 
+## Phase 3: asking apps for a window's pid (2026-10-18)
+
+Question (second code audit, P1): every `window.id()` calls `pid()`, which asked the window's app for `AXParent`, one Accessibility round trip each time. The focus handler runs on the main thread and calls `id()` on every tracked window several times (`isWindowTracked`, `refreshWindow`, `recordFocus`). Is that worth fixing?
+
+**Method.** Same as phase 2: a throwaway branch (`build/profiles/measure-pid.patch`) counted and timed each `AXParent` request per thread and logged it with `--log` per focus event, command and layout pass. Same rule, set before measuring: change the code only if the requests take ≥ 10 ms at p95, or ≥ 30 %, of a focus event or a command. One session before (about 6 minutes, 8 tracked windows) and one after (about 4 minutes, 4–6 windows), normal work plus bursts of focus, warp and swap keys. For the after session the patch was applied on top of the change and counts only the requests still made.
+
+**Before** (6.5.4): per focus event (56 events), 27 requests at the median (4.75 per tracked window), taking 3.3 ms median and **22.0 ms at p95: 57 % of the event's time**, on the main thread. Commands (115): 11 requests, 1.2 ms median, 5.2 ms p95, 7 % of their time. Layout passes (165): 20 requests, 9 %. The focus events met the rule; commands and passes didn't.
+
+**The change:** an element's parent can't change process, so `AXWindow` keeps the pid once `AXParent` has answered (`CachedPID`, locked, since Accessibility is called from several threads). Without an answer it uses the element's own pid, as before, and asks again next time.
+
+**After:** per focus event 2 requests (0.4 per tracked window), 0.09 ms median and 0.3 ms at p95; per command 1 request, 0.1 ms; per layout pass none. A focus event took 0.6 ms median instead of 6.3 ms, but only 6 focus events arrived in the after session: apps send `focusedWindowChanged` only when focus moves between two windows of the same app, and that session had fewer windows. The request counts are the solid part of the comparison. No new errors; the manual tests passed in the trial.
+
 ## When the slowdown happens again
 
 1. As soon as it feels slow, run `scripts/profile.sh 5m` and keep doing whatever triggered it.

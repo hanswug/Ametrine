@@ -11,12 +11,7 @@ import Quick
 import Silica
 
 private func frames(of windows: [TestWindow], in layout: Layout<TestWindow>, on screen: TestScreen) -> [String: CGRect] {
-    let windowSet = WindowSet<TestWindow>(
-        windows: windows.map { LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false) },
-        isWindowWithIDActive: { _ in return true },
-        isWindowWithIDFloating: { _ in return false },
-        windowForID: { id in return windows.first { $0.id() == id } }
-    )
+    let windowSet = WindowSet.tiled(windows)
     let assignments = layout.frameAssignments(windowSet, on: screen)!
     return Dictionary(uniqueKeysWithValues: assignments.map { ($0.frameAssignment.window.id, $0.frameAssignment.frame) })
 }
@@ -40,12 +35,7 @@ class TwinLayoutTests: QuickSpec {
 
         func frames(_ layout: Layout<TestWindow>, windowCount: Int, on screen: TestScreen) -> [CGRect] {
             let windows = (0..<windowCount).map { _ in TestWindow(element: nil)! }
-            let windowSet = WindowSet<TestWindow>(
-                windows: windows.map { LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false) },
-                isWindowWithIDActive: { _ in return true },
-                isWindowWithIDFloating: { _ in return false },
-                windowForID: { id in return windows.first { $0.id() == id } }
-            )
+            let windowSet = WindowSet.tiled(windows)
             let assignments = layout.frameAssignments(windowSet, on: screen)!
             return windows.map { window in assignments.first { $0.frameAssignment.window.id == window.id() }!.frameAssignment.frame }
         }

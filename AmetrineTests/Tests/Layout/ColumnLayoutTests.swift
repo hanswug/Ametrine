@@ -28,15 +28,7 @@ class ColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ColumnLayout<TestWindow>()
                 let frameAssignments = layout.frameAssignments(windowSet, on: screen)!
 
@@ -65,15 +57,7 @@ class ColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ColumnLayout<TestWindow>()
                 let frameAssignments = layout.frameAssignments(windowSet, on: screen)!
 
@@ -102,15 +86,7 @@ class ColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ColumnLayout<TestWindow>()
 
                 expect(layout.mainPaneCount).to(equal(1))
@@ -173,15 +149,7 @@ class ColumnLayoutTests: QuickSpec {
                     TestWindow(element: nil)!,
                     TestWindow(element: nil)!
                 ]
-                let layoutWindows = windows.map {
-                    LayoutWindow<TestWindow>(id: $0.id(), frame: $0.frame(), isFocused: false)
-                }
-                let windowSet = WindowSet<TestWindow>(
-                    windows: layoutWindows,
-                    isWindowWithIDActive: { _ in return true },
-                    isWindowWithIDFloating: { _ in return false },
-                    windowForID: { id in return windows.first { $0.id() == id } }
-                )
+                let windowSet = WindowSet.tiled(windows)
                 let layout = ColumnLayout<TestWindow>()
 
                 expect(layout.mainPaneCount).to(equal(1))

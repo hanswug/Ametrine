@@ -6,7 +6,7 @@ A tiling window manager for macOS, designed around the **main pane**: the window
 
 **Move what you see, in the direction you see it.** h/j/k/l focuses the window to the west, south, north or east (or the arrow keys, if Vim keys aren't yours); with another modifier the focused window swaps or warps there. What's on your left is one key to the left: no clockwise order to keep in your head, no Alt-Tab.
 
-**See the layout's state instead of guessing it.** The menu bar shows the layout and what it can't show by itself: `M:●○ | Tall Left` is one window in main and room for the next, `S:4 | Fullscreen` is four windows in the stack. And any window can tell you why it tiles or floats.
+**See the layout's state instead of guessing it.** The menu bar shows the layout and what it can't show by itself: `M: ●○ | Tall Left` is one window in main and room for the next, `S: 4 | Fullscreen` is four windows in the stack. And any window can tell you why it tiles or floats.
 
 **One documented file instead of settings windows.** Every setting and every command sits in a single config, each with its options and default, and this repo documents the rest. Nothing hides in preference panes, and nothing is left over from an earlier setup.
 
@@ -18,7 +18,7 @@ Ametrine is built on [Amethyst](https://github.com/ianyh/Amethyst) by Ian Ynda-H
 
 - **Layouts built around main.** Tall, Wide, Two Pane, 3Column, 4Column, Widescreen Tall, Column, Row, Fullscreen, Floating and BSP, each named by where main is, and each with a mirror-image twin. → [Layouts](docs/layouts.md)
 - **Move by direction.** h/j/k/l (or the arrow keys) with one modifier focuses the window to the west, south, north or east; with another the window warps or swaps there. → [Directional focus, swap and warp](docs/directional-navigation.md)
-- **Layout state in the menu bar.** Main's places as dots (`M:●○`, filled for a window, open for room) and the stack's size in Fullscreen and Two Pane (`S:4`), before the layout's name. → [Feedback](docs/features.md#feedback)
+- **Layout state in the menu bar.** Main's places as dots (`M: ●○`, filled for a window, open for room) and the stack's size in Fullscreen and Two Pane (`S: 4`), before the layout's name. → [Feedback](docs/features.md#feedback)
 - **Flip.** Mirror the layout, or reverse the rows or columns, to bring the windows at the far end closer. → [Flip](docs/layouts.md#flip)
 - **Padding modes.** Virtual monitors on a big display, such as a centred 27" or a 21:9 strip, picked per Space. → [Padding modes](docs/features.md#padding-modes)
 - **Command palette and URL.** Every command, searchable, with its key; and `ametrine://command/<key>` for scripts and launchers. → [Palette](docs/features.md#command-palette)

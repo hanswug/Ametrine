@@ -72,9 +72,9 @@ struct VisibleWindowChange<ID: Hashable> {
 /// The counts before the layout name in the menu bar (Hans, 2026-10-18), for what the layout itself doesn't show,
 /// set apart from the name by `|`.
 ///
-/// Main: `M:` and one dot per place in main, filled for a window, open for room, so `M:●○` says the next window can
-/// join main. Above three places it's digits (`M:5/7`).
-/// Stack: `S:` and every window in the pane that stacks, the one in front included (Fullscreen, Two Pane), `S:0` when
+/// Main: `M:` and one dot per place in main, filled for a window, open for room, so `M: ●○` says the next window can
+/// join main. Above three places it's digits (`M: 5/7`).
+/// Stack: `S:` and every window in the pane that stacks, the one in front included (Fullscreen, Two Pane), `S: 0` when
 /// empty.
 /// A layout without a main pane has no `M`, one that doesn't stack no `S`; with neither, the title is just the name.
 enum MenuBarCounts {
@@ -86,7 +86,7 @@ enum MenuBarCounts {
     ///   - stack: How many windows the stacking pane holds, or `nil` for a layout that doesn't stack.
     /// - Returns: The counts, or `nil` when the layout has neither.
     static func text(main: Int, maximum: Int?, stack: Int?) -> String? {
-        let parts = [maximum.map { mainText(main: main, maximum: $0) }, stack.map { "S:\(max(0, $0))" }].compactMap { $0 }
+        let parts = [maximum.map { mainText(main: main, maximum: $0) }, stack.map { "S: \(max(0, $0))" }].compactMap { $0 }
         return parts.isEmpty ? nil : parts.joined(separator: " ")
     }
 
@@ -98,9 +98,9 @@ enum MenuBarCounts {
     private static func mainText(main: Int, maximum: Int) -> String {
         let held = min(max(0, main), maximum)
         guard maximum <= maxDots else {
-            return "M:\(held)/\(maximum)"
+            return "M: \(held)/\(maximum)"
         }
-        return "M:" + String(repeating: "●", count: held) + String(repeating: "○", count: maximum - held)
+        return "M: " + String(repeating: "●", count: held) + String(repeating: "○", count: maximum - held)
     }
 }
 

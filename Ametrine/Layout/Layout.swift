@@ -299,7 +299,7 @@ extension Layout {
 }
 
 /// A layout that stacks windows in one place, only the front one visible: Fullscreen's whole screen, Two Pane's
-/// secondary pane. The menu bar shows the stack's size (`S:n`, `MenuBarCounts`).
+/// secondary pane. The menu bar shows the stack's size (`S: n`, `MenuBarCounts`).
 protocol StackingLayout {
     /// How many of `windowCount` windows are in the stack, the one in front included.
     func stackCount(windowCount: Int) -> Int

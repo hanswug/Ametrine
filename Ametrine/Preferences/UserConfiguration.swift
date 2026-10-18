@@ -1145,7 +1145,7 @@ class UserConfiguration: NSObject {
         return storage.bool(forKey: .hideMenuBarIcon)
     }
 
-    /// Whether the menu bar title starts with main's count and the stack's size (`M:●○`, `S:3`).
+    /// Whether the menu bar title starts with main's count and the stack's size (`M: ●○`, `S: 3`).
     func menuBarCounts() -> Bool {
         return storage.bool(forKey: .menuBarCounts)
     }

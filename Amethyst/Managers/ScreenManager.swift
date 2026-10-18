@@ -455,9 +455,6 @@ final class ScreenManager<Delegate: ScreenManagerDelegate>: NSObject, Codable {
         // Only built when a log destination wants it (`--log`): it asks every window for its title.
         log.debug(ScreenManager.reflowTrace(layout: layout, windowSet: windows, frameAssignments: frameAssignments))
 
-        // TODO: fix mff
-//        let mouseFollowsFocus = userConfiguration.mouseFollowsFocus()
-
         let completeOperation = BlockOperation()
 
         // The complete operation should execute the completion delegate call
@@ -473,12 +470,6 @@ final class ScreenManager<Delegate: ScreenManagerDelegate>: NSObject, Codable {
 
             DispatchQueue.main.async {
                 self?.delegate?.onReflowCompletion()
-                // TODO: fix mff
-//                if mouseFollowsFocus {
-//                    if case .windowSwap(let window, _) = event {
-//                        window.focus()
-//                    }
-//                }
             }
         }
 

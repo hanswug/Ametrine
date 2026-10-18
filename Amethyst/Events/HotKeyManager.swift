@@ -78,39 +78,6 @@ class HotKeyManager<Application: ApplicationType>: NSObject {
         _ = constructKeyCodeMap()
     }
 
-    private static func keyCodeForNumber(_ number: NSNumber) -> AMKeyCode {
-        let string = "\(number)"
-
-        guard !string.isEmpty else {
-            return AMKeyCodeInvalid
-        }
-
-        switch string.last! {
-        case "1":
-            return kVK_ANSI_1
-        case "2":
-            return kVK_ANSI_2
-        case "3":
-            return kVK_ANSI_3
-        case "4":
-            return kVK_ANSI_4
-        case "5":
-            return kVK_ANSI_5
-        case "6":
-            return kVK_ANSI_6
-        case "7":
-            return kVK_ANSI_7
-        case "8":
-            return kVK_ANSI_8
-        case "9":
-            return kVK_ANSI_9
-        case "0":
-            return kVK_ANSI_0
-        default:
-            return AMKeyCodeInvalid
-        }
-    }
-
     func setUpWithWindowManager(_ windowManager: WindowManager<Application>, configuration: UserConfiguration, appDelegate: AppDelegate) {
         constructCommandWithCommandKey(CommandKey.cycleLayoutForward.rawValue) {
             let screenManager: ScreenManager<WindowManager<Application>>? = windowManager.focusedScreenManager()
@@ -563,28 +530,6 @@ class HotKeyManager<Application: ApplicationType>: NSObject {
             return entry
         }
         return CommandPalette.annotating(entries, notes: notes)
-    }
-
-    private func carbonModifiersFromModifiers(_ modifiers: UInt) -> UInt32 {
-        var carbonModifiers: UInt32 = 0
-
-        if (modifiers & UInt(NSEvent.ModifierFlags.shift.rawValue)) > 0 {
-            carbonModifiers = carbonModifiers | UInt32(shiftKey)
-        }
-
-        if (modifiers & UInt(NSEvent.ModifierFlags.command.rawValue)) > 0 {
-            carbonModifiers = carbonModifiers | UInt32(cmdKey)
-        }
-
-        if (modifiers & UInt(NSEvent.ModifierFlags.option.rawValue)) > 0 {
-            carbonModifiers = carbonModifiers | UInt32(optionKey)
-        }
-
-        if (modifiers & UInt(NSEvent.ModifierFlags.control.rawValue)) > 0 {
-            carbonModifiers = carbonModifiers | UInt32(controlKey)
-        }
-
-        return carbonModifiers
     }
 
     /// Display names by command key, for every command that is set up.

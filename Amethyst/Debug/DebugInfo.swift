@@ -39,14 +39,6 @@ struct DebugInfo {
         return "\(shortVersion) (\(version))"
     }
 
-    static func isProcessTrusted() -> Bool {
-        let options = [
-            kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: false
-        ]
-
-        return AXIsProcessTrustedWithOptions(options as CFDictionary)
-    }
-
     static func screens() -> String {
         return NSScreen.screens.map { "\t\($0.frame) [\($0.frameIncludingDockAndMenu())]" }.joined(separator: "\n")
     }

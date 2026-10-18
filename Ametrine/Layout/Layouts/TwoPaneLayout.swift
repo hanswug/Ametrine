@@ -1,6 +1,6 @@
 //
 //  TwoPaneLayout.swift
-//  Amethyst
+//  Ametrine
 //
 //  Created by @mwz on 10/06/2021.
 //  Copyright © 2021 Ian Ynda-Hummel. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  ReflowTests.swift
-//  AmethystTests
+//  AmetrineTests
 //
 
 @testable import Ametrine

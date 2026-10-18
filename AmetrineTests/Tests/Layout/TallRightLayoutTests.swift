@@ -1,6 +1,6 @@
 //
 //  TallRightLayoutTests.swift
-//  AmethystTests
+//  AmetrineTests
 //
 //  Created by Ian Ynda-Hummel on 12/18/19.
 //  Copyright © 2019 Ian Ynda-Hummel. All rights reserved.

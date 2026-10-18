@@ -1,6 +1,6 @@
 //
 //  OverflowWindowsTests.swift
-//  AmethystTests
+//  AmetrineTests
 //
 
 @testable import Ametrine

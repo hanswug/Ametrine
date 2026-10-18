@@ -1,6 +1,6 @@
 //
 //  Change.swift
-//  Amethyst
+//  Ametrine
 //
 //  Created by Ian Ynda-Hummel on 3/29/19.
 //  Copyright © 2019 Ian Ynda-Hummel. All rights reserved.

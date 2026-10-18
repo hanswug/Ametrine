@@ -1,6 +1,6 @@
 //
 //  ShortcutSheet.swift
-//  Amethyst
+//  Ametrine
 //
 //  Your own keys at a glance (Hans, 2026-10-17): display only, bound commands only. The direction grid on top
 //  (key = direction, modifier = verb), then the other keys grouped like the config's sections.

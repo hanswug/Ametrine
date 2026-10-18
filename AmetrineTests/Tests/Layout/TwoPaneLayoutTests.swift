@@ -1,6 +1,6 @@
 //
 //  TwoPaneLayoutTests.swift
-//  AmethystTests
+//  AmetrineTests
 //
 //  Created by @mwz on 14/06/21.
 //  Copyright © 2021 Ian Ynda-Hummel. All rights reserved.

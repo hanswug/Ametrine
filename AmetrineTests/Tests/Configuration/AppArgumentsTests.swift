@@ -1,6 +1,6 @@
 //
 //  AppArgumentsTests.swift
-//  AmethystTests
+//  AmetrineTests
 //
 
 @testable import Ametrine

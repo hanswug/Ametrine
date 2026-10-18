@@ -1,6 +1,6 @@
 //
 //  DirectionalNavigationTests.swift
-//  AmethystTests
+//  AmetrineTests
 //
 
 @testable import Ametrine

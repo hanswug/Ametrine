@@ -1,6 +1,6 @@
 //
 //  FourColumnLayout.swift
-//  Amethyst
+//  Ametrine
 //
 //  Originally created by Ian Ynda-Hummel on 12/15/15.
 //  Copyright © 2015 Ian Ynda-Hummel. All rights reserved.

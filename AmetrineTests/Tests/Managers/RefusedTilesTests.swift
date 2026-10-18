@@ -1,6 +1,6 @@
 //
 //  RefusedTilesTests.swift
-//  AmethystTests
+//  AmetrineTests
 //
 
 @testable import Ametrine

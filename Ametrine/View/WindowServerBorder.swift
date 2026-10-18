@@ -1,6 +1,6 @@
 //
 //  WindowServerBorder.swift
-//  Amethyst
+//  Ametrine
 //
 //  The focus border as eight small windows of its own in the window server (four corners, four edges), drawn with Core
 //  Graphics once and then only moved, and the edges stretched, in window-server transactions off the main thread. A resize

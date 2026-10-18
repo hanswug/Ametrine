@@ -1,6 +1,6 @@
 //
 //  WindowManager.swift
-//  Amethyst
+//  Ametrine
 //
 //  Created by Ian Ynda-Hummel on 5/14/16.
 //  Copyright © 2016 Ian Ynda-Hummel. All rights reserved.
@@ -750,7 +750,7 @@ extension WindowManager {
     }
 
     /**
-     When an application's existing windows are picked up together (Amethyst starting, an application launching with restored windows) they are judged in arbitrary order, and the first tiled one would claim the anchor. Instead, claim free slots up front for the largest window per space, so e.g. a Settings window open next to the main window floats rather than tiles.
+     When an application's existing windows are picked up together (Ametrine starting, an application launching with restored windows) they are judged in arbitrary order, and the first tiled one would claim the anchor. Instead, claim free slots up front for the largest window per space, so e.g. a Settings window open next to the main window floats rather than tiles.
      */
     private func claimSecondaryWindowAnchors(among applicationWindows: [Window], of application: AnyApplication<Application>) {
         var largestWindows: [SecondaryWindowAnchors<Window.WindowID>.Slot: (window: Window, area: CGFloat)] = [:]
@@ -1147,7 +1147,7 @@ extension WindowManager: MouseStateKeeperDelegate {
 
     /// The cursor, in the coordinates layouts use.
     private func dropPoint(on screen: Screen) -> CGPoint {
-        // need to flip mouse coordinate system to fit Amethyst https://stackoverflow.com/a/45289010/2063546
+        // need to flip mouse coordinate system to fit Ametrine https://stackoverflow.com/a/45289010/2063546
         let flippedPointerLocation = NSPointToCGPoint(NSEvent.mouseLocation)
         let unflippedY = Screen.globalHeight() - flippedPointerLocation.y + screen.frameIncludingDockAndMenu().origin.y
         return NSPointToCGPoint(NSPoint(x: flippedPointerLocation.x, y: unflippedY))

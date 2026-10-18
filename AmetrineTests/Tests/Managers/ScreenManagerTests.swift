@@ -1,6 +1,6 @@
 //
 //  ScreenManagerTests.swift
-//  AmethystTests
+//  AmetrineTests
 //
 //  Created by Ian Ynda-Hummel on 2/11/20.
 //  Copyright © 2020 Ian Ynda-Hummel. All rights reserved.

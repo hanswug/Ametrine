@@ -1,6 +1,6 @@
 //
 //  DirectionalNavigation.swift
-//  Amethyst
+//  Ametrine
 //
 //  Directional focus and swap: finds the window west, east, north or south of another.
 //

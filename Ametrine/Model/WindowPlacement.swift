@@ -1,6 +1,6 @@
 //
 //  WindowPlacement.swift
-//  Amethyst
+//  Ametrine
 //
 
 import Foundation

@@ -1,6 +1,6 @@
 //
 //  MouseDrop.swift
-//  Amethyst
+//  Ametrine
 //
 //  What dropping a dragged window does: Shift makes it a warp, and the point decides where it lands.
 //

@@ -1,6 +1,6 @@
 //
 //  OverflowWindows.swift
-//  Amethyst
+//  Ametrine
 //
 
 import Foundation

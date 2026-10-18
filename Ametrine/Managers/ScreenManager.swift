@@ -1,6 +1,6 @@
 //
 //  ScreenManager.swift
-//  Amethyst
+//  Ametrine
 //
 //  Created by Ian Ynda-Hummel on 12/23/15.
 //  Copyright © 2015 Ian Ynda-Hummel. All rights reserved.
@@ -899,7 +899,7 @@ extension ScreenManager: Comparable {
 
 extension Notification.Name {
     /// Posted on the main queue when a screen's current layout changes: cycled, selected, or restored on a space change.
-    static let currentLayoutDidChange = Notification.Name("AmethystCurrentLayoutDidChange")
+    static let currentLayoutDidChange = Notification.Name("AmetrineCurrentLayoutDidChange")
     /// Posted on the main queue when a layout pass changes a screen's menu bar counts (`ScreenManager.menuBarCounts`).
     static let menuBarCountsDidChange = Notification.Name("AmetrineMenuBarCountsDidChange")
 }

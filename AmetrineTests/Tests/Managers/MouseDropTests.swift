@@ -1,6 +1,6 @@
 //
 //  MouseDropTests.swift
-//  AmethystTests
+//  AmetrineTests
 //
 
 @testable import Ametrine

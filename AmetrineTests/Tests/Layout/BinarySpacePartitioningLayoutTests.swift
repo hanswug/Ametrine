@@ -1,6 +1,6 @@
 //
 //  BinarySpacePartitioningLayoutTests.swift
-//  Amethyst
+//  Ametrine
 //
 //  Created by Ian Ynda-Hummel on 5/29/16.
 //  Copyright © 2016 Ian Ynda-Hummel. All rights reserved.

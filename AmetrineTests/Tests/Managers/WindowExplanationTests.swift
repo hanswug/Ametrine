@@ -1,6 +1,6 @@
 //
 //  WindowExplanationTests.swift
-//  AmethystTests
+//  AmetrineTests
 //
 
 @testable import Ametrine

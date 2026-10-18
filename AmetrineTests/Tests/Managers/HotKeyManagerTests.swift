@@ -1,6 +1,6 @@
 //
 //  HotKeyManagerTests.swift
-//  Amethyst
+//  Ametrine
 //
 //  Created by Ian Ynda-Hummel on 4/18/17.
 //  Copyright © 2017 Ian Ynda-Hummel. All rights reserved.

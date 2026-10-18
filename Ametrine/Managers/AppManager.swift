@@ -1,6 +1,6 @@
 //
 //  relaunch.swift
-//  Amethyst
+//  Ametrine
 //
 //  Created by Agustin Suarez on 2021-02-23.
 //  Copyright © 2021 Ian Ynda-Hummel. All rights reserved.

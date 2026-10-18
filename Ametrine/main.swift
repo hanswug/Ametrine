@@ -1,6 +1,6 @@
 //
 //  main.swift
-//  Amethyst
+//  Ametrine
 //
 //  Created by Ian Ynda-Hummel on 2/24/20.
 //  Copyright © 2020 Ian Ynda-Hummel. All rights reserved.
@@ -11,7 +11,7 @@ import Cocoa
 
 struct Arguments: ParsableArguments {}
 
-struct Amethyst: ParsableCommand {
+struct Ametrine: ParsableCommand {
     static var configuration: CommandConfiguration = CommandConfiguration(
         subcommands: [Debug.self, App.self],
         defaultSubcommand: App.self
@@ -38,7 +38,7 @@ if CommandLine.arguments.contains("--debug-info") {
     _ = NSApplicationMain(CommandLine.argc, CommandLine.unsafeArgv)
 } else {
     do {
-        var command = try Amethyst.parseAsRoot()
+        var command = try Ametrine.parseAsRoot()
         try command.run()
     } catch {
         Arguments.exit(withError: error)

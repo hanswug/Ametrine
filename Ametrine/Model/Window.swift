@@ -1,6 +1,6 @@
 //
 //  Window.swift
-//  Amethyst
+//  Ametrine
 //
 //  Created by Ian Ynda-Hummel on 3/10/19.
 //  Copyright © 2019 Ian Ynda-Hummel. All rights reserved.
@@ -77,7 +77,7 @@ protocol WindowType: Equatable {
      */
     func title() -> String?
 
-    /// Whether or not the window should actually be managed by Amethyst.
+    /// Whether or not the window should actually be managed by Ametrine.
     func shouldBeManaged() -> Bool
 
     /// Whether or not the window should float by default.
@@ -180,7 +180,7 @@ extension AXWindowID: CustomStringConvertible {
     }
 }
 
-/// Conformance of `AXWindow` as an Amethyst window.
+/// Conformance of `AXWindow` as an Ametrine window.
 extension AXWindow: WindowType {
     typealias Screen = AMScreen
     typealias WindowID = AXWindowID
@@ -233,7 +233,7 @@ extension AXWindow: WindowType {
     }
 
     /**
-     Whether or not the window should actually be managed by Amethyst.
+     Whether or not the window should actually be managed by Ametrine.
      
      In this case the window must be movable and be a standard window.
      */

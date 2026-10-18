@@ -1,6 +1,6 @@
 //
 //  PaneCounts.swift
-//  Amethyst
+//  Ametrine
 //
 //  How many windows each pane of a paned layout holds, stored so warp can grow and shrink panes.
 //

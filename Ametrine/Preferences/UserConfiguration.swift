@@ -1,6 +1,6 @@
 //
 //  UserConfiguration.swift
-//  Amethyst
+//  Ametrine
 //
 //  Created by Ian Ynda-Hummel on 5/8/16.
 //  Copyright © 2016 Ian Ynda-Hummel. All rights reserved.
@@ -461,7 +461,7 @@ class UserConfiguration: NSObject {
 
     /// The name of the configuration files. A renamed build sets AMConfigName in its Info.plist to read its own files.
     static var configurationName: String {
-        return (Bundle.main.infoDictionary?["AMConfigName"] as? String) ?? "amethyst"
+        return (Bundle.main.infoDictionary?["AMConfigName"] as? String) ?? "ametrine"
     }
 
     /// `$XDG_CONFIG_HOME/<name>` (a file, or a directory holding `<name>.yml`).
@@ -508,7 +508,7 @@ class UserConfiguration: NSObject {
         let alert = NSAlert()
         alert.alertStyle = .critical
         alert.messageText = message
-        let appName = (Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String) ?? "Amethyst"
+        let appName = (Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String) ?? "Ametrine"
         alert.informativeText = "\(path)\n\n\(appName) will quit. \(advice)"
         alert.runModal()
         exit(1)
@@ -516,10 +516,10 @@ class UserConfiguration: NSObject {
 
     private func loadConfigurationFile() {
         let configName = UserConfiguration.configurationName
-        let amethystXDGConfigPath = UserConfiguration.xdgConfigurationDirectory
-        let amethystYAMLConfigPath = NSHomeDirectory().appending("/.\(configName).yml")
-        let amethystJSONConfigPath = NSHomeDirectory().appending("/.\(configName)")
-        let defaultAmethystConfigPath = Bundle.main.path(forResource: "default", ofType: "ametrine")
+        let xdgConfigPath = UserConfiguration.xdgConfigurationDirectory
+        let yamlConfigPath = NSHomeDirectory().appending("/.\(configName).yml")
+        let jsonConfigPath = NSHomeDirectory().appending("/.\(configName)")
+        let defaultConfigPath = Bundle.main.path(forResource: "default", ofType: "ametrine")
 
         var isDirectory: ObjCBool = false
         /**
@@ -529,23 +529,23 @@ class UserConfiguration: NSObject {
          3. json in home dir
          4. default json
          */
-        if FileManager.default.fileExists(atPath: amethystYAMLConfigPath, isDirectory: &isDirectory) {
-            configurationFilePath = amethystYAMLConfigPath
-            configurationYAML = yamlForConfig(at: amethystYAMLConfigPath)
+        if FileManager.default.fileExists(atPath: yamlConfigPath, isDirectory: &isDirectory) {
+            configurationFilePath = yamlConfigPath
+            configurationYAML = yamlForConfig(at: yamlConfigPath)
 
             if configurationYAML == nil {
                 exitWithConfigurationFileError()
             }
-        } else if FileManager.default.fileExists(atPath: amethystXDGConfigPath, isDirectory: &isDirectory) {
-            configurationFilePath = isDirectory.boolValue ? UserConfiguration.xdgConfigurationFile(inDirectory: amethystXDGConfigPath) : amethystXDGConfigPath
+        } else if FileManager.default.fileExists(atPath: xdgConfigPath, isDirectory: &isDirectory) {
+            configurationFilePath = isDirectory.boolValue ? UserConfiguration.xdgConfigurationFile(inDirectory: xdgConfigPath) : xdgConfigPath
             configurationYAML = yamlForConfig(at: configurationFilePath!)
 
             if configurationYAML == nil {
                 exitWithConfigurationFileError()
             }
-        } else if FileManager.default.fileExists(atPath: amethystJSONConfigPath, isDirectory: &isDirectory) {
-            configurationFilePath = amethystJSONConfigPath
-            configurationJSON = jsonForConfig(at: amethystJSONConfigPath)
+        } else if FileManager.default.fileExists(atPath: jsonConfigPath, isDirectory: &isDirectory) {
+            configurationFilePath = jsonConfigPath
+            configurationJSON = jsonForConfig(at: jsonConfigPath)
 
             if configurationJSON == nil {
                 exitWithConfigurationFileError()
@@ -554,7 +554,7 @@ class UserConfiguration: NSObject {
             exitWithMissingConfigurationFile()
         }
 
-        defaultConfiguration = jsonForConfig(at: defaultAmethystConfigPath ?? "")
+        defaultConfiguration = jsonForConfig(at: defaultConfigPath ?? "")
         if defaultConfiguration == nil {
             log.error("error loading default configuration")
 

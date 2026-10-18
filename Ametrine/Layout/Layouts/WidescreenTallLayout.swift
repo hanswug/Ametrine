@@ -1,6 +1,6 @@
 //
 //  WidescreenTallLayout.swift
-//  Amethyst
+//  Ametrine
 //
 //  Created by Ian Ynda-Hummel on 12/15/15.
 //  Copyright © 2015 Ian Ynda-Hummel. All rights reserved.

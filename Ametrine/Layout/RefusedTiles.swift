@@ -1,6 +1,6 @@
 //
 //  RefusedTiles.swift
-//  Amethyst
+//  Ametrine
 //
 
 import Foundation

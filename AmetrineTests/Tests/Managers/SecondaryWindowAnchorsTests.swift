@@ -1,6 +1,6 @@
 //
 //  SecondaryWindowAnchorsTests.swift
-//  AmethystTests
+//  AmetrineTests
 //
 
 @testable import Ametrine

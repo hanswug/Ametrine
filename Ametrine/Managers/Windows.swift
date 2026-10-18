@@ -1,6 +1,6 @@
 //
 //  Windows.swift
-//  Amethyst
+//  Ametrine
 //
 //  Created by Ian Ynda-Hummel on 9/15/19.
 //  Copyright © 2019 Ian Ynda-Hummel. All rights reserved.

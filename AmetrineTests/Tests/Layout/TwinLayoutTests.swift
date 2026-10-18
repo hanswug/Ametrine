@@ -1,6 +1,6 @@
 //
 //  TwinLayoutTests.swift
-//  AmethystTests
+//  AmetrineTests
 //
 //  Every twin is its original mirrored (Hans, 2026-10-17), and the layout keys.
 //

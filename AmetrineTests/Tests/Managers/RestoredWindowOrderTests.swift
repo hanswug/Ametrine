@@ -1,6 +1,6 @@
 //
 //  RestoredWindowOrderTests.swift
-//  AmethystTests
+//  AmetrineTests
 //
 
 @testable import Ametrine

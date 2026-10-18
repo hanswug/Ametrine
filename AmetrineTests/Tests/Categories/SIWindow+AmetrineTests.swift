@@ -3,7 +3,7 @@ import Cocoa
 import Nimble
 import Quick
 
-class SIWindowAmethystTests: QuickSpec {
+class SIWindowAmetrineTests: QuickSpec {
     override func spec() {
         describe("approximate rect comparison") {
             it("tolerates some provided error") {

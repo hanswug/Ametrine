@@ -1,6 +1,6 @@
 //
 //  ShortcutSheetTests.swift
-//  AmethystTests
+//  AmetrineTests
 //
 //  The shortcut sheet: your own keys at a glance (Hans, 2026-10-17).
 //

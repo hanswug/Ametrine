@@ -1,6 +1,6 @@
 //
 //  PaneCountsTests.swift
-//  AmethystTests
+//  AmetrineTests
 //
 //  Stored pane sizes and warp (handover §5.5).
 //

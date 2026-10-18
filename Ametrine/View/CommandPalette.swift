@@ -1,6 +1,6 @@
 //
 //  CommandPalette.swift
-//  Amethyst
+//  Ametrine
 //
 
 import Cocoa

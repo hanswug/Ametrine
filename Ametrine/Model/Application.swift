@@ -1,6 +1,6 @@
 //
 //  Application.swift
-//  Amethyst
+//  Ametrine
 //
 //  Created by Ian Ynda-Hummel on 3/12/19.
 //  Copyright © 2019 Ian Ynda-Hummel. All rights reserved.
@@ -174,7 +174,7 @@ class AnyApplication<Application: ApplicationType>: ApplicationType {
     }
 }
 
-/// Conformance of `SIApplication` as an Amethyst application.
+/// Conformance of `SIApplication` as an Ametrine application.
 extension SIApplication: ApplicationType {
     /// `SIApplication` uses `AXWindow` as its window type.
     typealias Window = AXWindow

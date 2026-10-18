@@ -1,6 +1,6 @@
 //
 //  FocusBorder.swift
-//  Amethyst
+//  Ametrine
 //
 //  A border around the focused window, drawn by a click-through overlay just outside the window's frame
 //  (see WindowServerBorder.swift for the window-server version).

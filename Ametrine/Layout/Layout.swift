@@ -1,6 +1,6 @@
 //
 //  Layout.swift
-//  Amethyst
+//  Ametrine
 //
 //  Created by Ian Ynda-Hummel on 12/3/15.
 //  Copyright © 2015 Ian Ynda-Hummel. All rights reserved.
@@ -309,7 +309,7 @@ protocol StackingLayout {
  A particular kind of layout that organizes windows into a main pane and any number of sub-panes.
  
  - Note:
- The definition is intentionally somewhat layout. This is more intended to demonstrate the expected interface for a fairly common paradigm in Amethyst layouts.
+ The definition is intentionally somewhat layout. This is more intended to demonstrate the expected interface for a fairly common paradigm in Ametrine layouts.
  */
 protocol PanedLayout {
     /**

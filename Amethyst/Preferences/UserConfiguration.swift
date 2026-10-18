@@ -125,7 +125,6 @@ enum ConfigurationKey: String {
     case focusBorderRadius = "focus-border-radius"
     case useCanaryBuild = "use-canary-build"
     case mainArrivalPosition = "main-arrival-position"
-    case followSpaceThrownWindows = "follow-space-thrown-windows"
     case windowResizeStep = "window-resize-step"
     case screenPaddingLeft = "screen-padding-left"
     case screenPaddingRight = "screen-padding-right"
@@ -1140,10 +1139,6 @@ class UserConfiguration: NSObject {
 
     func disablePaddingOnBuiltinDisplay() -> Bool {
         return storage.bool(forKey: .disablePaddingOnBuiltinDisplay)
-    }
-
-    func followWindowsThrownBetweenSpaces() -> Bool {
-        return storage.bool(forKey: .followSpaceThrownWindows)
     }
 
     func restoreLayoutsOnLaunch() -> Bool {

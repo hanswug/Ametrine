@@ -384,10 +384,11 @@ enables-layout-hud-on-space-change: true
 # Hide the menu bar icon and the layout name next to it: true | false (default false).
 hide-menu-bar-icon: false
 
-# Start the menu bar title with main's count: a filled dot per window in main, an open one per free place
-# (M:●○ = room for the next window), digits above three places (M:5/7), M:– for a layout without a main pane:
+# Start the menu bar title with counts the layout doesn't show. Main: a filled dot per window in main, an open
+# one per free place (M:●○ = room for the next window), digits above three places (M:5/7), M:– without a main
+# pane. Stack, in Fullscreen and Two Pane: every window in the stack, the front one included (S:3).
 # true | false (default true).
-menu-bar-main-count: true
+menu-bar-counts: true
 
 # Debug information in the layout HUD: true | false (default false).
 debug-layout-info: false

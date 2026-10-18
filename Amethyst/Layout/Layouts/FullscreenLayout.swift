@@ -8,7 +8,7 @@
 
 import Silica
 
-class FullscreenLayout<Window: WindowType>: Layout<Window> {
+class FullscreenLayout<Window: WindowType>: Layout<Window>, StackingLayout {
     override static var layoutName: String { return "Fullscreen" }
     override static var layoutKey: String { return "fullscreen" }
 
@@ -27,5 +27,10 @@ class FullscreenLayout<Window: WindowType>: Layout<Window> {
             )
             return FrameAssignmentOperation(frameAssignment: frameAssignment, windowSet: windowSet)
         }
+    }
+
+    /// Every window: they all share the screen.
+    func stackCount(windowCount: Int) -> Int {
+        return windowCount
     }
 }

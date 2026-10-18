@@ -93,7 +93,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         pendingCommandURLs.forEach(runCommand(from:))
         pendingCommandURLs = []
 
-        for name in [Notification.Name.currentLayoutDidChange, .mainCountDidChange] {
+        for name in [Notification.Name.currentLayoutDidChange, .menuBarCountsDidChange] {
             NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
                 self?.updateStatusItemTitle()
             }
@@ -101,18 +101,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         updateStatusItemTitle()
     }
 
-    /// Shows the current layout's name next to the menu bar icon, after main's count with `menu-bar-main-count`.
+    /// Shows the current layout's name next to the menu bar icon, after main's count and the stack's size with `menu-bar-counts`.
     private func updateStatusItemTitle() {
         let screenManager = windowManager?.focusedScreenManager() ?? windowManager?.screenManager(at: 0)
         guard let layoutName = screenManager?.currentLayout?.displayName else {
             statusItem?.button?.title = ""
             return
         }
-        let mainCount = UserConfiguration.shared.menuBarMainCount() ? screenManager?.mainCountIndicator : nil
+        let counts = UserConfiguration.shared.menuBarCounts() ? screenManager?.menuBarCounts : nil
         statusItem?.button?.imagePosition = .imageLeft
         // Fixed-width digits, so `M:5/7` → `M:6/7` doesn't shift the layout name.
         statusItem?.button?.font = .monospacedDigitSystemFont(ofSize: NSFont.menuBarFont(ofSize: 0).pointSize, weight: .regular)
-        statusItem?.button?.title = " " + [mainCount, layoutName].compactMap { $0 }.joined(separator: " ")
+        statusItem?.button?.title = " " + [counts, layoutName].compactMap { $0 }.joined(separator: " ")
     }
 
     @objc func handleGetURLEvent(_ event: NSAppleEventDescriptor, withReplyEvent replyEvent: NSAppleEventDescriptor) {

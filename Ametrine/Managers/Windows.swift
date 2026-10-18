@@ -192,6 +192,14 @@ extension WindowManager {
             }
 
             let screenWindows = windows.filter { window in
+                // Windows that aren't on screen (another Space, minimised) are left out on the cached on-screen list
+                // first, before asking the window server for their Space and Accessibility for their frame. Same
+                // result: being on that list is part of isWindowActive anyway. Measured 2026-10-18: of 11 windows
+                // per call, 4 got past the Space check (audit C1).
+                guard activeIDCache.contains(window.cgID()) else {
+                    return false
+                }
+
                 let space = CGWindowsInfo.windowSpace(window)
 
                 guard let windowScreen = window.screen(), currentSpace.id == space else {
@@ -508,8 +516,10 @@ extension WindowManager {
         }
 
         func windowSet(forWindows windows: [Window]) -> WindowSet<Window> {
+            // The focused window, asked once, not once per window (each isFocused() asks the system; audit C2).
+            let focusedWindow = Window.currentlyFocused()
             let layoutWindows: [LayoutWindow<Window>] = windows.map {
-                LayoutWindow(id: $0.id(), frame: $0.frame(), isFocused: $0.isFocused())
+                LayoutWindow(id: $0.id(), frame: $0.frame(), isFocused: focusedWindow == $0)
             }
 
             let snapshotFloatingMap = floatingMap

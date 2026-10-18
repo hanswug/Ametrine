@@ -28,6 +28,23 @@ Phase 0 baseline (handover §5.0). Question: when Amethyst feels slow or quirky,
 
 Time Profiler only samples threads that are **running**. When Amethyst waits on a synchronous AX call to an app that is busy or hung, its thread is blocked, not running, so the wait barely shows up as CPU. Such waits would cause sluggish tiling without CPU cost. If they reached 250 ms on the main thread, they would appear as potential hangs; none did in this session. The slowdown is occasional and simply didn't happen during this recording.
 
+## Phase 2: listing a screen's windows (2026-10-18)
+
+Question (code audit, C1/C2): is `activeWindows(onScreen:)` worth making cheaper? It runs in every layout pass and in every focus, swap and warp command.
+
+**Method.** Time Profiler can't answer this: the cost is waiting for other apps' Accessibility replies, which it barely sees (above). Instead, a throwaway branch logged wall-clock times with `--log` around `activeWindows(onScreen:)` (split into its Space lookup, frame and checks), `windowSet(forWindows:)`, each command and each layout pass. Two sessions of about 10 minutes each, normal work plus bursts of focus, warp and swap keys, on the big screen. The rule was set before measuring: change the code only if `activeWindows` plus the focus lookup take ≥ 10 ms at the 95th percentile per command, or ≥ 30 % of a command. The timing patches are kept locally in `build/profiles/`.
+
+**Before** (6.5.3): 685 calls, 11 windows checked per call (median), 4 on this Space and screen. Per command, `activeWindows` plus the focus lookup took 6.3 ms median and **21.8 ms at p95**, so the rule said go. A layout pass spent 45 % of its time there. The worst single call took 110 ms, because one app took 86 ms to answer a `pid()` request.
+
+**The audit's fix would have saved nothing.** It proposed checking floating, hidden and active first, but those checks ask the apps too (`id()` and `pid()`), so the estimated cost per call stayed 2.16 → 2.15 ms. What works instead:
+
+- **C1, revised:** a window not on the window server's on-screen list (another Space, minimised) is left out before its Space and frame are asked for. The list is cached and the window ID is cached by Silica, so the check is free, and the result is the same, since the list is already part of the "active" condition.
+- **C2:** the focused window is looked up once per window set instead of once per window.
+
+**After** (6.5.4): the pre-filter skipped all 4 windows that weren't on this Space or screen (median). The focus lookup per window set went from 0.45 to 0.13 ms median and from 4.4 to 0.46 ms at p95. Per command, `activeWindows` plus the focus lookup went from **21.8 to 11.8 ms at p95 (−46 %)**, and every command measured dropped, for example warp 11.5–17.5 → 6.3–12.9 ms median. The sessions differed (8 windows per call after, 11 before), so the comparison was also made per window and command by command. No new errors.
+
+**What's left:** a focus key takes about 18–36 ms in total, mostly the focusing itself (bringing the app forward, moving the cursor), not listing windows. Nothing here is noticeable; the gain is fewer requests to other apps.
+
 ## When the slowdown happens again
 
 1. As soon as it feels slow, run `scripts/profile.sh 5m` and keep doing whatever triggered it.
@@ -36,7 +53,7 @@ Time Profiler only samples threads that are **running**. When Amethyst waits on 
 2. Read the result:
    - **High CPU in `observerCallback` / `ApplicationObservation.handle`, especially `didMoveWindow`/resize:** an app is flooding notifications. Find it with step 3.
    - **Potential hangs with `mach_msg` at the bottom of the main-thread stack:** Amethyst is blocked on a slow app's AX reply. Open the trace in Instruments and see which AX call; `-[SIAccessibilityElement …]` frames name the attribute.
-   - **High CPU in `activeWindows(onScreen:)` / `windowSet(forWindowsOnScreen:)`:** the per-reflow window filtering is the cost. That's a candidate for caching screen membership.
+   - **High CPU in `activeWindows(onScreen:)` / `windowSet(forWindows:)`:** the per-reflow window filtering is the cost. Since 6.5.4 windows not on screen are skipped first (Phase 2 above); waiting time doesn't show here, so measure wall-clock time the same way.
    - **Nothing in Amethyst:** look elsewhere (WindowServer, the app itself), e.g. Activity Monitor or Instruments "All Processes".
 3. Per-app notification count (only if step 2 points at a flood):
    - Quit Ametrine and start it with logging, written to a file: `open --stdout build/profiles/ametrine.log --stderr build/profiles/ametrine.log -a /Applications/Ametrine.app --args --log`. (Launching through `open` keeps it a normal app launch; started directly from a terminal it may not pick up every app.)

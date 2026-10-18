@@ -182,14 +182,6 @@ enum LayoutType<Window: WindowType> {
         return from(key: layoutKey)?.layoutClass.init()
     }
 
-    static func layoutNameForKey(_ layoutKey: String) -> String? {
-        return from(key: layoutKey)?.layoutClass.layoutName
-    }
-
-    static func standardLayoutClasses() -> [Layout<Window>.Type] {
-        return standardLayouts.compactMap { $0.layoutClass }
-    }
-
     // Returns a list of (key, name) pairs, with the names shown to the user (`layout-names`)
     static func availableLayoutStrings() -> [(key: String, name: String)] {
         return standardLayouts.map { ($0.key, UserConfiguration.shared.layoutDisplayName(forKey: $0.key)) }

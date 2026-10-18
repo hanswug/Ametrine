@@ -291,7 +291,7 @@ class TwinLayoutTests: QuickSpec {
 
             it("has display names that say where main is") {
                 let names = ["tall-left", "wide-bottom", "two-pane-b", "3column-middle", "widescreen-tall-left", "column-right", "row-top"]
-                    .map { LayoutType<TestWindow>.layoutNameForKey($0) }
+                    .map { LayoutType<TestWindow>.from(key: $0)?.layoutClass.layoutName }
 
                 expect(names).to(equal(["Tall Left", "Wide Bottom", "Two Pane B", "3Column Middle", "Widescreen Tall Left", "Column Right", "Row Top"]))
             }
@@ -299,8 +299,7 @@ class TwinLayoutTests: QuickSpec {
             it("knows no layout outside the built-in ones") {
                 expect(LayoutType<TestWindow>.from(key: "my-layout")).to(beNil())
                 expect(LayoutType<TestWindow>.layoutForKey("my-layout")).to(beNil())
-                expect(LayoutType<TestWindow>.layoutNameForKey("my-layout")).to(beNil())
-            }
+                            }
 
             it("no longer knows the old keys") {
                 for oldKey in ["tall", "wide", "two-pane", "two-pane-right", "middle-wide", "widescreen-tall", "column", "row"] {

@@ -39,7 +39,7 @@ Fixes: set `float-small-windows: false` (Ametrine's sample config does), change 
 
 This is a known macOS 27 bug, and it happens with Ametrine quit too. Open App Exposé (Application Windows, for example from a hot corner) and leave it. Windows from other Spaces are then drawn on the current Space, at the frames they have on their own Space, until you click any window. It happens every time, and a restart doesn't clear it.
 
-The window server lists them as on screen while they still belong to their own Spaces, and the current Space doesn't change. Ametrine gets no event for this and moves none of those windows (checked with `--log`, 2026-10-16). Clicking a window clears it.
+The window server lists them as on screen while they still belong to their own Spaces, and the current Space doesn't change. Ametrine gets no event for this and moves none of those windows. Clicking a window clears it.
 
 ## One application isn't working!
 

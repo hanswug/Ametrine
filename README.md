@@ -24,6 +24,7 @@ Ametrine is built on [Amethyst](https://github.com/ianyh/Amethyst) by Ian Ynda-H
 - **Command palette and URL.** Every command, searchable, with its key; and `ametrine://command/<key>` for scripts and launchers. → [Palette](docs/features.md#command-palette)
 - **Shortcut sheet.** Your own keys at a glance, with the direction grid that shows the modifier rule. → [Shortcut sheet](docs/features.md#shortcut-sheet)
 - **Calm windows.** Settings and dialogs float on their own, a window limit keeps the tiles readable, and windows snap back to their tiles. → [Features](docs/features.md)
+- **Light on your other apps.** Ametrine spends half as long waiting on your apps as the Amethyst code it came from, measured. → [Profiling](docs/PROFILING.md#phase-2-listing-a-screens-windows-2026-10-18)
 - **Focus border.** A soft glow around the focused window that follows its corners. → [Focus border](docs/features.md#focus-border)
 - **One config file.** No preferences window and no built-in keys: the file binds what you use. → [Configuration](docs/configuration-files.md)
 

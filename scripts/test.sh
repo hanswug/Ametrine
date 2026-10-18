@@ -28,8 +28,8 @@ trap cleanup EXIT
 defaults delete "$TEST_HOST_BUNDLE_ID" >/dev/null 2>&1 || true
 
 TEST_RUNNER_XDG_CONFIG_HOME="$EMPTY_CONFIG_HOME" xcodebuild \
-    -workspace Amethyst.xcworkspace \
-    -scheme Amethyst \
+    -workspace Ametrine.xcworkspace \
+    -scheme Ametrine \
     -configuration Debug \
     -derivedDataPath build/DerivedData \
     -quiet \

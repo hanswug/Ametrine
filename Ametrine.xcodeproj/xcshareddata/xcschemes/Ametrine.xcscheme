@@ -31,7 +31,7 @@
                BlueprintIdentifier = "402DB6DD1742E41A00D1C936"
                BuildableName = "Amethyst.app"
                BlueprintName = "Amethyst"
-               ReferencedContainer = "container:Amethyst.xcodeproj">
+               ReferencedContainer = "container:Ametrine.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -58,7 +58,7 @@
       codeCoverageEnabled = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Amethyst.xctestplan"
+            reference = "container:Ametrine.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -70,7 +70,7 @@
                BlueprintIdentifier = "40D95B461C6E2ED800AAF433"
                BuildableName = "AmethystTests.xctest"
                BlueprintName = "AmethystTests"
-               ReferencedContainer = "container:Amethyst.xcodeproj">
+               ReferencedContainer = "container:Ametrine.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -92,7 +92,7 @@
             BlueprintIdentifier = "402DB6DD1742E41A00D1C936"
             BuildableName = "Amethyst.app"
             BlueprintName = "Amethyst"
-            ReferencedContainer = "container:Amethyst.xcodeproj">
+            ReferencedContainer = "container:Ametrine.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -109,7 +109,7 @@
             BlueprintIdentifier = "402DB6DD1742E41A00D1C936"
             BuildableName = "Amethyst.app"
             BlueprintName = "Amethyst"
-            ReferencedContainer = "container:Amethyst.xcodeproj">
+            ReferencedContainer = "container:Ametrine.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

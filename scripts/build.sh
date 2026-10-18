@@ -35,8 +35,8 @@ BUILD_NUMBER="$(git rev-list --count HEAD)"
 
 echo "==> Building Release (build ${BUILD_NUMBER})"
 xcodebuild \
-    -workspace Amethyst.xcworkspace \
-    -scheme Amethyst \
+    -workspace Ametrine.xcworkspace \
+    -scheme Ametrine \
     -configuration Release \
     -derivedDataPath "$DERIVED_DATA" \
     -quiet \

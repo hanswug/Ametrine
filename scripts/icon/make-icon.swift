@@ -75,7 +75,7 @@ while let argument = arguments.next() {
 
 let scriptDirectory = URL(fileURLWithPath: CommandLine.arguments[0]).deletingLastPathComponent()
 let repoRoot = scriptDirectory.deletingLastPathComponent().deletingLastPathComponent()
-let assets = repoRoot.appendingPathComponent("Amethyst/Images.xcassets")
+let assets = repoRoot.appendingPathComponent("Ametrine/Images.xcassets")
 
 func loadImage(_ url: URL) -> CGImage {
     guard let source = CGImageSourceCreateWithURL(url as CFURL, nil),

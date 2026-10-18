@@ -598,6 +598,7 @@ extension WindowManager {
 
         guard !windows.isWindowTracked(window) else {
             log.debug("Window was already tracked: \(window)")
+            refreshTrackedWindow(window, application: application)
             return
         }
 
@@ -633,8 +634,42 @@ extension WindowManager {
                     return .timer(.milliseconds((count * count * 100)), scheduler: MainScheduler.instance)
                 }
             }
+            .subscribe(
+                onError: { error in
+                    log.error("Failed to track window: \(window) - \(error)")
+                }
+            )
+            .disposed(by: disposeBag)
+    }
+
+    /**
+     Re-points an already-tracked window at a live AX element (upstream #1870).
+
+     Apps that hide their windows on close (Telegram, Slack) can invalidate the tracked element while the window, known
+     by (pid, CGWindowID), lives on and comes back later. The stale element still passes identity checks but fails every
+     attribute read, so it can neither be laid out nor be replaced by normal tracking. When an event hands over a live
+     element for a tracked window, it's swapped in, the destroyed observation moves over to it, and the screen re-tiles.
+     */
+    private func refreshTrackedWindow(_ window: Window, application: AnyApplication<Application>) {
+        guard let staleWindow = windows.refreshWindow(window) else {
+            return
+        }
+
+        log.debug("Refreshed stale element for tracked window: \(window)")
+
+        // The destroyed observation belongs to the element, not the window: drop the stale element's, so a late
+        // notification from it can't remove the live window, and observe the new element instead.
+        let observation = ApplicationObservation(application: application, delegate: self)
+        observation.removeObserversForWindow(staleWindow)
+        observation
+            .addObserversForWindow(window)
             .subscribe()
             .disposed(by: disposeBag)
+
+        windows.regenerateActiveIDCache()
+        if let screen = window.screen() {
+            markScreenForReflow(screen)
+        }
     }
 
     private func determineFloatForWindow(_ window: Window, application: AnyApplication<Application>, force: Bool) throws {
@@ -807,7 +842,7 @@ extension WindowManager {
         }
 
         if let otherWindow = otherWindow {
-            _ = windows.replace(window: window, withWindow: otherWindow)
+            _ = windows.replace(window: otherWindow, withWindow: window)
             distributeEventToScreen(screen, change: .tabChange(window: window, previousWindow: otherWindow))
         } else {
             windows.add(window: window, atFront: userConfiguration.mainArrivalPosition() == .first)
@@ -1121,10 +1156,11 @@ extension WindowManager: MouseStateKeeperDelegate {
     /// Swaps the dragged window with the window whose tile is under the point, else with the window under it. A drop on
     /// its own tile swaps nothing, also where windows share a tile (Fullscreen, a stacked pane).
     private func swap(_ draggedWindow: Window, withWindowAt pointerLocation: CGPoint, on screen: Screen) -> Bool {
-        let windows: [Window] = self.windows.windows(onScreen: screen)
+        // Only this Space's tiled windows: windows(onScreen:) also has other Spaces' (upstream #1879).
+        let windows = activeWindows(on: screen)
 
         if let screenManager: ScreenManager<WindowManager<Application>> = focusedScreenManager(), let layout = screenManager.currentLayout {
-            let windowSet = self.windows.windowSet(forWindowsOnScreen: screen)
+            let windowSet = self.windows.windowSet(forActiveWindowsOnScreen: screen)
             if let ownTile = layout.assignedFrame(draggedWindow, of: windowSet, on: screen)?.frame,
                MouseDrop.dropsOnOwnTile(at: pointerLocation, ownTile: ownTile) {
                 return false
@@ -1226,6 +1262,7 @@ extension WindowManager: ApplicationObservationDelegate {
         if pendingTabDetection.removeValue(forKey: window.id()) != nil {
             completeTabDetection(for: window, on: screen)
         } else if windows.isWindowTracked(window) {
+            refreshTrackedWindow(window, application: application)
             windows.recordFocus(of: window)
             distributeEventToScreen(screen, change: .focusChanged(window: window))
             markScreenForReflow(screen, afterFocusChange: true)
@@ -1242,6 +1279,7 @@ extension WindowManager: ApplicationObservationDelegate {
 
     func application(_ application: AnyApplication<Application>, didFindPotentiallyNewWindow window: Window) {
         guard !windows.isWindowTracked(window) else {
+            refreshTrackedWindow(window, application: application)
             return
         }
 

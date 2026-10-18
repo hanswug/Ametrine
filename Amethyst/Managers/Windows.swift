@@ -79,6 +79,25 @@ struct SavedWindowID: Codable, Hashable {
     let windowID: CGWindowID
 }
 
+/// The tracking order when one window takes another's place (upstream #1870): a new tab replacing the one it hides,
+/// or a live element replacing a stale one.
+enum TrackingOrder {
+    /// `window`'s place goes to `replacement`, which leaves its own place if it had one; `nil` when `window` isn't in
+    /// `list`.
+    static func replacing<T: Equatable>(_ window: T, with replacement: T, in list: [T]) -> [T]? {
+        guard let index = list.firstIndex(of: window) else {
+            return nil
+        }
+        var list = list
+        let replacementIndex = list.firstIndex(of: replacement)
+        list[index] = replacement
+        if let replacementIndex, replacementIndex != index {
+            list.remove(at: replacementIndex)
+        }
+        return list
+    }
+}
+
 /**
  The window order saved when Ametrine quit, applied while windows arrive after a relaunch, so the main pane keeps its window.
 
@@ -267,13 +286,31 @@ extension WindowManager {
             windows.remove(at: windowIndex)
         }
 
+        /**
+         Swaps the stored instance of an already-tracked window for `window`, which has the same identity but a fresh AX
+         element (upstream #1870). Order and floating state are untouched; see `WindowManager.refreshTrackedWindow`.
+
+         - Returns: The replaced instance, or `nil` if the window isn't tracked or is already stored as this element.
+         */
+        func refreshWindow(_ window: Window) -> Window? {
+            guard let index = windows.firstIndex(where: { $0.id() == window.id() }), windows[index] != window else {
+                return nil
+            }
+
+            let staleWindow = windows[index]
+            windows[index] = window
+            return staleWindow
+        }
+
+        /// Gives `window`'s place in the order to `otherWindow`, which leaves its own place (`TrackingOrder`). If
+        /// `window` isn't tracked, `otherWindow` is appended and this returns `false`.
         @discardableResult func replace(window: Window, withWindow otherWindow: Window) -> Bool {
             // A tab taking another tab's place is as old as that one.
-            if additionOrder[window.id()] == nil {
-                if let otherOrder = additionOrder[otherWindow.id()] {
-                    additionOrder[window.id()] = otherOrder
+            if additionOrder[otherWindow.id()] == nil {
+                if let order = additionOrder[window.id()] {
+                    additionOrder[otherWindow.id()] = order
                 } else {
-                    recordAddition(of: window)
+                    recordAddition(of: otherWindow)
                 }
             }
 
@@ -284,18 +321,12 @@ extension WindowManager {
                 }
             }
 
-            guard let otherWindowIndex = windows.firstIndex(of: otherWindow) else {
+            guard let order = TrackingOrder.replacing(window, with: otherWindow, in: windows) else {
                 windows.append(otherWindow)
                 return false
             }
 
-            let windowIndex = windows.firstIndex(of: window)
-            windows[otherWindowIndex] = window
-
-            if let windowIndex {
-                windows.remove(at: windowIndex)
-            }
-
+            windows = order
             return true
         }
 
@@ -471,10 +502,6 @@ extension WindowManager {
         }
 
         // MARK: Window Sets
-
-        func windowSet(forWindowsOnScreen screen: Screen) -> WindowSet<Window> {
-            return windowSet(forWindows: windows(onScreen: screen))
-        }
 
         func windowSet(forActiveWindowsOnScreen screen: Screen) -> WindowSet<Window> {
             return windowSet(forWindows: activeWindows(onScreen: screen))

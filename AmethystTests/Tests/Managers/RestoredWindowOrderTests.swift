@@ -11,6 +11,26 @@ import Silica
 
 class RestoredWindowOrderTests: QuickSpec {
     override func spec() {
+        describe("one window taking another's place") {
+            it("gives a new tab the place of the tab it hides, which leaves the order") {
+                // The new tab was already tracked at the end: it moves into the old tab's place.
+                expect(TrackingOrder.replacing("old", with: "new", in: ["a", "old", "b", "new"])).to(equal(["a", "new", "b"]))
+                expect(TrackingOrder.replacing("old", with: "new", in: ["new", "a", "old"])).to(equal(["a", "new"]))
+            }
+
+            it("puts a window that wasn't tracked yet in the place") {
+                expect(TrackingOrder.replacing("old", with: "new", in: ["a", "old", "b"])).to(equal(["a", "new", "b"]))
+            }
+
+            it("does nothing when the window to replace isn't tracked") {
+                expect(TrackingOrder.replacing("old", with: "new", in: ["a", "new"])).to(beNil())
+            }
+
+            it("keeps a window that takes its own place") {
+                expect(TrackingOrder.replacing("a", with: "a", in: ["a", "b"])).to(equal(["a", "b"]))
+            }
+        }
+
         /// Adds windows the way `Windows.add` does: saved ones by their saved place, the rest at the end.
         func arrive(_ arrivals: [String], savedOrder: [String]) -> (windows: [String], order: RestoredWindowOrder<String>) {
             var order = RestoredWindowOrder(savedOrder)

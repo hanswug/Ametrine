@@ -472,10 +472,6 @@ extension WindowManager {
 
         // MARK: Window Sets
 
-        func windowSet(forWindowsOnScreen screen: Screen) -> WindowSet<Window> {
-            return windowSet(forWindows: windows(onScreen: screen))
-        }
-
         func windowSet(forActiveWindowsOnScreen screen: Screen) -> WindowSet<Window> {
             return windowSet(forWindows: activeWindows(onScreen: screen))
         }

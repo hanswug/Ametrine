@@ -1121,10 +1121,11 @@ extension WindowManager: MouseStateKeeperDelegate {
     /// Swaps the dragged window with the window whose tile is under the point, else with the window under it. A drop on
     /// its own tile swaps nothing, also where windows share a tile (Fullscreen, a stacked pane).
     private func swap(_ draggedWindow: Window, withWindowAt pointerLocation: CGPoint, on screen: Screen) -> Bool {
-        let windows: [Window] = self.windows.windows(onScreen: screen)
+        // Only this Space's tiled windows: windows(onScreen:) also has other Spaces' (upstream #1879).
+        let windows = activeWindows(on: screen)
 
         if let screenManager: ScreenManager<WindowManager<Application>> = focusedScreenManager(), let layout = screenManager.currentLayout {
-            let windowSet = self.windows.windowSet(forWindowsOnScreen: screen)
+            let windowSet = self.windows.windowSet(forActiveWindowsOnScreen: screen)
             if let ownTile = layout.assignedFrame(draggedWindow, of: windowSet, on: screen)?.frame,
                MouseDrop.dropsOnOwnTile(at: pointerLocation, ownTile: ownTile) {
                 return false

@@ -1,6 +1,6 @@
 # Manual tests
 
-The unit tests cover the layouts' arithmetic. They can't reach what happens between Ametrine and macOS: which events arrive, in which order, and which apps don't send them. Run these by hand before merging a trial branch into `fork/main`, and after any change to window tracking, focus or floating.
+The unit tests cover the layouts' arithmetic. They can't reach what happens between Ametrine and macOS: which events arrive, in which order, and which apps don't send them. Run these by hand after any change to window tracking, focus or floating, before it's merged.
 
 Use three or four everyday apps from different vendors (a terminal, a browser, an editor, an Electron app). The bugs found so far depended on the app.
 
@@ -84,4 +84,4 @@ With `mouse-swaps-windows`, `mouse-warps-windows`, `mouse-resizes-windows` and `
 | Reload Config | The app relaunches, keeps the current layout and applies the file. |
 | Open the command palette, run a command | It runs; the app you were in stays in front. |
 | Cycle the padding mode on the large display | The layout redraws in the new area instantly. |
-| Launch with `--log` | The app starts (it used to exit). |
+| Launch with `--log` | The app starts and writes to `~/Library/Logs/Ametrine/Ametrine.log`. |

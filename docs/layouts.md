@@ -576,9 +576,9 @@ BSP                                      flip-columns
 
 Ametrine fixes a few ways BSP strayed from that design:
 
-- **The tree follows the windows actually on screen.** Hidden, closed or moved windows no longer leave an empty tile, and a window the tree missed still gets one. A hidden app's windows come back at the focused window, not at their old spot.
+- **The tree follows the windows actually on screen.** Hidden, closed or moved windows never leave an empty tile, and a window the tree missed still gets one. A hidden app's windows come back at the focused window, not at their old spot.
 - **A new window splits the window you last focused**, also when you got there by clicking into another app.
-- **Closing one of the first windows no longer reshuffles the layout:** the windows next to it take over its space.
+- **Closing one of the first windows doesn't reshuffle the layout:** the windows next to it take over its space.
 
 ## Part 3: quick reference
 

@@ -33,4 +33,4 @@ How Ametrine is built, tested and released. To build it for yourself, the README
 
 Upstream Amethyst can stay installed as a fallback with its own config (`~/.config/amethyst/amethyst.yml`), but never run both at once.
 
-Upstream fixes are read and ported by hand (`git fetch upstream`, then compare): the project, folders and module are named Ametrine, so cherry-picks no longer apply as they are. Git still follows the renamed files.
+Upstream fixes are read and ported by hand (`git fetch upstream`, then compare): the project, folders and module are named Ametrine, so cherry-picks don't apply as they are. Git still follows the renamed files.

@@ -299,7 +299,7 @@ class BinarySpacePartitioningLayout<Window: WindowType>: StatefulLayout<Window> 
                 return
             }
 
-            if let windowNode = rootNode.findWindowID(window.id()) {
+            if rootNode.findWindowID(window.id()) != nil {
                 log.warning("Trying to swap a tab in from another node")
             }
 

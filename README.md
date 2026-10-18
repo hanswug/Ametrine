@@ -7,6 +7,8 @@ What you see is what you move.
 
 **Start from a real config.** Ametrine comes with mine, the one I work with every day: every setting and every key in one file, each setting with its options and default right beside it. Change what you like without going back and forth to the docs.
 
+**Too many keys? Bind a few.** The command palette runs every command by name, and the shortcut sheet shows the keys you did bind at a glance, with focus, swap and warp in one grid.
+
 **Where's the app? Everywhere.** Ametrine has no window of its own: it sits in the menu bar, works on every window you have, and leaves what it doesn't do (free placement, launching) to the tools that do it well.
 
 Built on [Amethyst](https://github.com/ianyh/Amethyst) by Ian Ynda-Hummel, for anything from a laptop to a 55" 4K screen; padding modes can even make a huge display behave like a smaller one.

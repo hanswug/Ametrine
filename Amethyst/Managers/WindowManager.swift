@@ -1519,6 +1519,11 @@ enum DirectionalTarget<Window: WindowType> {
 
 // MARK: Warp
 extension WindowManager {
+    /// The IDs of this screen's active windows on its current Space (not floating, not hidden), in window order.
+    private func activeWindowIDs(on screen: Screen) -> [Window.WindowID] {
+        return windows.windowSet(forActiveWindowsOnScreen: screen).windows.map(\.id)
+    }
+
     /**
      Warps the window toward `direction` (handover §5.5): it joins the neighbour's pane, or swaps where that's the rule.
 
@@ -1554,7 +1559,7 @@ extension WindowManager {
     }
 
     private func warp(_ window: Window, toward direction: Direction, in layout: PaneCountedLayout<Window>, on screen: Screen) {
-        let windowIDs = windows.windowSet(forActiveWindowsOnScreen: screen).windows.map(\.id)
+        let windowIDs = activeWindowIDs(on: screen)
         guard let index = windowIDs.firstIndex(of: window.id()) else {
             return
         }
@@ -1588,7 +1593,7 @@ extension WindowManager {
             return
         }
 
-        let windowIDs = windows.windowSet(forActiveWindowsOnScreen: screen).windows.map(\.id)
+        let windowIDs = activeWindowIDs(on: screen)
         let order: [Window.WindowID]
         if let bspLayout = layout as? BinarySpacePartitioningLayout<Window> {
             guard bspLayout.flip(axis, in: screen.adjustedFrame()) else {
@@ -1632,7 +1637,7 @@ extension WindowManager {
             return
         }
 
-        let windowIDs = windows.windowSet(forActiveWindowsOnScreen: screen).windows.map(\.id)
+        let windowIDs = activeWindowIDs(on: screen)
         let before = middle.paneCounts
         guard let swap = middle.sideSwap(of: windowIDs) else {
             return
@@ -1659,7 +1664,7 @@ extension WindowManager {
             return
         }
 
-        let windowIDs = windows.windowSet(forActiveWindowsOnScreen: screen).windows.map(\.id)
+        let windowIDs = activeWindowIDs(on: screen)
         guard let index = windowIDs.firstIndex(of: window.id()) else {
             return
         }

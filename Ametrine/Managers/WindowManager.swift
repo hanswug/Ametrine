@@ -20,17 +20,6 @@ enum TrackingError: Error {
     case alreadyTracked
 }
 
-/**
- The tolerant interval between the click and the application of a mouse move from focus.
- 
- - Note:
- 
- At the time of the check we confirm that the mouse is not _currently_ clicked. However, it is possible that the click happened faster than the focus notification could be processed so that when we process the focus the mouse is no longer clicked. In this case we could incorrectly move the mouse to the center of the focused window.
- 
- This value is an approximation of the time between a fast click and the focus event being processed. For values larger than this we would expect the mouse to still be clicked.
- */
-private let mouseMoveClickSpeedTolerance: TimeInterval = 0.3
-
 final class WindowManager<Application: ApplicationType>: NSObject, Codable {
     typealias Window = Application.Window
     typealias Screen = Window.Screen
@@ -167,7 +156,6 @@ final class WindowManager<Application: ApplicationType>: NSObject, Codable {
             return
         }
         markScreenForReflow(screen, afterFocusChange: true)
-//        doMouseFollowsFocus(focusedWindow: focusedWindow)
     }
 
     @objc func applicationDidLaunch(_ notification: Notification) {
@@ -1012,10 +1000,6 @@ extension WindowManager {
     }
 
     func onReflowCompletion() {
-//        if let focusedWindow = Window.currentlyFocused() {
-//            doMouseFollowsFocus(focusedWindow: focusedWindow)
-//        }
-
         // This handler will be executed by the Operation, in a queue.  Although async
         // (and although the docs say that it executes in a separate thread), I consider
         // this to be thread safe, at least safe enough, because we always want the
@@ -1025,34 +1009,6 @@ extension WindowManager {
         updateFocusBorder()
     }
 
-    func doMouseFollowsFocus(focusedWindow: Window) {
-        guard UserConfiguration.shared.mouseFollowsFocus() else {
-            return
-        }
-
-        guard NSEvent.pressedMouseButtons == 0 else {
-            // If a mouse button is pressed, then the user is probably dragging something between windows. Do not move the mouse.
-            return
-        }
-
-        // See the description of mouseMoveClickSpeedTolerance for details.
-        if let interval = mouseStateKeeper.lastClick?.timeIntervalSinceNow, abs(interval) < mouseMoveClickSpeedTolerance {
-            return
-        }
-
-        if focusTransitionCoordinator.recentlyTriggeredFocusFollowsMouse() {
-            // If we have recently triggered focus-follows-mouse, then disable mouse-follows-focus. Otherwise, the moment
-            // focus-follows-mouse is triggered, the mouse will jump to the center of the focused window.
-            return
-        }
-
-        let windowFrame = focusedWindow.frame()
-        let mouseCursorPoint = NSPoint(x: windowFrame.midX, y: windowFrame.midY)
-        if let mouseMoveEvent = CGEvent(mouseEventSource: nil, mouseType: .mouseMoved, mouseCursorPosition: mouseCursorPoint, mouseButton: .left) {
-            mouseMoveEvent.flags = CGEventFlags(rawValue: 0)
-            mouseMoveEvent.post(tap: CGEventTapLocation.cghidEventTap)
-        }
-    }
 }
 
 extension WindowManager: MouseStateKeeperDelegate {
@@ -1273,8 +1229,6 @@ extension WindowManager: ApplicationObservationDelegate {
             log.debug("Focused untracked window before creation notification - recording early focus: \(window)")
             earlyFocusedWindows.insert(window.id())
         }
-
-//        doMouseFollowsFocus(focusedWindow: window)
     }
 
     func application(_ application: AnyApplication<Application>, didFindPotentiallyNewWindow window: Window) {

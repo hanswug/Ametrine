@@ -28,8 +28,6 @@ protocol FocusTransitionTarget: AnyObject {
     func windows(onScreen screen: Screen) -> [Window]
     func nextWindowIDClockwise(on screen: Screen) -> Window.WindowID?
     func nextWindowIDCounterClockwise(on screen: Screen) -> Window.WindowID?
-    func nextScreenIndexClockwise(from screen: Screen) -> Int
-    func nextScreenIndexCounterClockwise(from screen: Screen) -> Int
     func directionalNeighbor(of window: Window, toward direction: Direction) -> Window?
     func stackNeighbor(of window: Window, toward direction: Direction) -> Window?
     func isFullscreenLayout(on screen: Screen) -> Bool
@@ -190,30 +188,6 @@ class FocusTransitionCoordinator<Target: FocusTransitionTarget> {
 
         // Otherwise focus the topmost window
         target?.executeTransition(.focusWindow(topWindow))
-    }
-
-    func moveFocusScreenCounterClockwise() {
-        guard let focusedScreen = Window.currentlyFocused()?.screen() else {
-            return
-        }
-
-        guard let nextScreenIndex = target?.nextScreenIndexCounterClockwise(from: focusedScreen) else {
-            return
-        }
-
-        focusScreen(at: nextScreenIndex)
-    }
-
-    func moveFocusScreenClockwise() {
-        guard let focusedScreen = Window.currentlyFocused()?.screen() else {
-            return
-        }
-
-        guard let screenIndex = target?.nextScreenIndexClockwise(from: focusedScreen) else {
-            return
-        }
-
-        focusScreen(at: screenIndex)
     }
 
     func recentlyTriggeredFocusFollowsMouse() -> Bool {

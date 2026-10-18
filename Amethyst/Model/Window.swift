@@ -96,42 +96,8 @@ protocol WindowType: Equatable {
 
     @discardableResult func minimize() -> Bool
 
-    /**
-     Moves the window to a screen.
-     
-     This method takes into account the dimensions of the screen to ensure that the window actually fits onto it.
-     
-     - Parameters:
-        - screen: The screen to move the window to.
-     */
-    func moveScaled(to screen: Screen)
-
     /// Whether or not the window is currently on any screen.
     func isOnScreen() -> Bool
-
-    /**
-     Moves the window to a space.
-     
-     - Parameters:
-        - space: The index of the space.
-     */
-    func move(toSpace space: UInt)
-
-    /**
-     Moves the window to the space at an index.
-     
-     - Parameters:
-        - space: The index of the space
-     */
-    func move(toSpaceAtIndex space: UInt)
-
-    /**
-     Moves the window to a space.
-     
-     - Parameters:
-         - spaceID: The id of the space.
-     */
-    func move(toSpace spaceID: CGSSpaceID)
 }
 
 enum WindowDecodingError: Error {
@@ -362,33 +328,6 @@ extension AXWindow: WindowType {
     @discardableResult func minimize() -> Bool {
         super.minimize()
         return isWindowMinimized()
-    }
-
-    func moveScaled(to screen: Screen) {
-        let screenFrame = screen.frameWithoutDockOrMenu()
-        let currentFrame = frame()
-        var scaledFrame = currentFrame
-
-        if scaledFrame.width > screenFrame.width {
-            scaledFrame.size.width = screenFrame.width
-        }
-
-        if scaledFrame.height > screenFrame.height {
-            scaledFrame.size.height = screenFrame.height
-        }
-
-        if scaledFrame != currentFrame {
-            setFrame(scaledFrame)
-        }
-
-        move(to: screen.screen)
-    }
-
-    func move(toSpaceAtIndex space: UInt) {
-        super.move(toSpace: space)
-    }
-
-    func move(toSpace spaceID: CGSSpaceID) {
     }
 }
 

@@ -82,24 +82,8 @@ final class TestWindow: WindowType {
       return false
     }
 
-    func moveScaled(to screen: Screen) {
-
-    }
-
     func isOnScreen() -> Bool {
         return true
-    }
-
-    func move(toSpace space: UInt) {
-
-    }
-
-    func move(toSpaceAtIndex space: UInt) {
-
-    }
-
-    func move(toSpace spaceID: CGSSpaceID) {
-
     }
 
     static func == (lhs: TestWindow, rhs: TestWindow) -> Bool {

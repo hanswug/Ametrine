@@ -42,11 +42,6 @@ struct PaneCounts: Codable, Equatable, CustomStringConvertible {
         return counts.map(String.init).joined(separator: "|")
     }
 
-    /// The list index of the pane's first window.
-    func startIndex(ofPane pane: Int) -> Int {
-        return counts.prefix(pane).reduce(0, +)
-    }
-
     /// The pane holding the window at `index` in the list.
     func pane(ofIndex index: Int) -> Int {
         var end = 0
@@ -57,11 +52,6 @@ struct PaneCounts: Codable, Equatable, CustomStringConvertible {
             }
         }
         return max(0, paneCount - 1)
-    }
-
-    /// Side panes that hold no window.
-    var emptySidePanes: [Int] {
-        return counts.indices.dropFirst().filter { counts[$0] == 0 }
     }
 
     // MARK: Fitting to a window count

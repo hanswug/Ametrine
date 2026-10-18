@@ -110,7 +110,7 @@ struct WindowSet<Window: WindowType> {
     }
 }
 
-class FrameAssignmentOperation<Window: WindowType>: Operation {
+class FrameAssignmentOperation<Window: WindowType>: Operation, @unchecked Sendable {
     let frameAssignment: FrameAssignment<Window>
     let windowSet: WindowSet<Window>
 

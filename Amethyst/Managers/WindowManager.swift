@@ -35,11 +35,6 @@ final class WindowManager<Application: ApplicationType>: NSObject, Codable {
     typealias Window = Application.Window
     typealias Screen = Window.Screen
 
-    struct PendingEvent {
-        let screen: Screen
-        let event: Change<Window>
-    }
-
     private struct UndeterminedApplication {
         let application: NSRunningApplication
         let activationPolicyObservation: NSKeyValueObservation?
@@ -80,7 +75,6 @@ final class WindowManager<Application: ApplicationType>: NSObject, Codable {
     private var untrackedSecondaryWindowAnchors: [Window.WindowID: (window: Window, claimed: Date)] = [:]
     private var pendingTabDetection: [Window.WindowID: Window] = [:]
     private var earlyFocusedWindows: Set<Window.WindowID> = []
-    private var eventQueue: [PendingEvent] = []
 
     private lazy var mouseStateKeeper = MouseStateKeeper(delegate: self)
     private lazy var applicationEventHandler = ApplicationEventHandler(delegate: self)
@@ -228,11 +222,6 @@ final class WindowManager<Application: ApplicationType>: NSObject, Codable {
 
         // Update spaces across screens so that events get distributed to the correct layouts
         screens.updateSpaces()
-
-        for pendingEvent in eventQueue {
-            distributeEventToScreen(pendingEvent.screen, change: pendingEvent.event)
-        }
-        eventQueue.removeAll()
 
         pendingTabDetection.removeAll()
         earlyFocusedWindows.removeAll()
@@ -428,7 +417,7 @@ extension WindowManager {
             state: windows.isWindowFloating(window) ? .floating : .tiled,
             reason: windows.placementReason(for: window)
         )
-        input.floatingIsAllowList = !userConfiguration.floatingBundleIdentifiersIsBlacklist()
+        input.floatingIsAllowList = !userConfiguration.floatingBundleIdentifiersIsBlocklist()
         input.tilingEnabled = userConfiguration.tilingEnabled
         input.isSecondaryWindowAnchor = windows.secondaryWindowAnchors.slot(anchoredBy: window.id()) != nil
         input.windowMaxCount = userConfiguration.windowMaxCount()
@@ -667,7 +656,7 @@ extension WindowManager {
         windows.setFloating(floating, forWindow: window, reason: reason)
 
         let applicationName = NSRunningApplication(processIdentifier: window.pid())?.localizedName ?? "pid \(window.pid())"
-        let reasonText = WindowExplanation.reasonText(reason, floating: floating, allowList: !userConfiguration.floatingBundleIdentifiersIsBlacklist())
+        let reasonText = WindowExplanation.reasonText(reason, floating: floating, allowList: !userConfiguration.floatingBundleIdentifiersIsBlocklist())
         log.info("\(floating ? "Floating" : "Tiled"): \(applicationName) \"\(window.title() ?? "")\" · \(reasonText)")
     }
 
@@ -1375,10 +1364,6 @@ extension WindowManager {
     func screenManager(for screen: Screen) -> ScreenManager<WindowManager<Application>>? {
         return screens.screenManagers.first { $0.screen?.screenID() == screen.screenID() }
     }
-
-    func screenManagerIndex(for screen: Screen) -> Int? {
-        return screens.screenManagers.firstIndex { $0.screen?.screenID() == screen.screenID() }
-    }
 }
 
 // MARK: Window Transition
@@ -1393,41 +1378,6 @@ extension WindowManager: WindowTransitionTarget {
 
             distributeEventToAllScreens(.windowSwap(window: window, otherWindow: otherWindow))
             markAllScreensForReflow()
-        case let .moveWindowToScreen(window, screen):
-            let currentScreen = window.screen()
-            window.moveScaled(to: screen)
-            if currentScreen != nil {
-                distributeEventToScreen(screen, change: .remove(window: window))
-                markScreenForReflow(screen)
-            }
-            distributeEventToScreen(screen, change: .add(window: window))
-            window.focus()
-        case let .moveWindowToSpaceAtIndex(window, spaceIndex, sourceSpaceIndex):
-            guard
-                let screen = window.screen(),
-                let spaces = CGSpacesInfo<Window>.spacesForAllScreens(includeOnlyUserSpaces: true),
-                spaceIndex < spaces.count
-            else {
-                return
-            }
-
-            let targetSpace = spaces[spaceIndex]
-            guard let targetScreen = CGSpacesInfo<Window>.screenForSpace(space: targetSpace) else {
-                return
-            }
-            distributeEventToScreen(screen, change: .remove(window: window))
-            eventQueue.append(PendingEvent(screen: targetScreen, event: .add(window: window)))
-            window.move(toSpaceAtIndex: UInt(spaceIndex + 1))
-            if targetScreen.screenID() != screen.screenID() {
-                // necessary to set frame here as window is expected to be at origin relative to targe screen when moved, can be improved.
-                window.moveScaled(to: targetScreen)
-            }
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                if !UserConfiguration.shared.followWindowsThrownBetweenSpaces() {
-                    SISystemWideElement.switch(toSpace: UInt(sourceSpaceIndex + 1))
-                }
-            }
         case .resetFocus:
             if let screen = screens.screenManagers.first?.screen {
                 executeTransition(.focusScreen(screen))
@@ -1451,22 +1401,6 @@ extension WindowManager: WindowTransitionTarget {
         return windows.activeWindows(onScreen: screen).filter { window in
             return window.shouldBeManaged() && !self.windows.isWindowFloating(window)
         }
-    }
-
-    func nextScreenIndexClockwise(from screen: Screen) -> Int {
-        guard let screenManagerIndex = self.screenManagerIndex(for: screen) else {
-            return -1
-        }
-
-        return (screenManagerIndex + 1) % (screens.screenManagers.count)
-    }
-
-    func nextScreenIndexCounterClockwise(from screen: Screen) -> Int {
-        guard let screenManagerIndex = self.screenManagerIndex(for: screen) else {
-            return -1
-        }
-
-        return (screenManagerIndex == 0 ? screens.screenManagers.count - 1 : screenManagerIndex - 1)
     }
 
     func lastMainWindowForCurrentSpace() -> Window? {
@@ -1585,6 +1519,11 @@ enum DirectionalTarget<Window: WindowType> {
 
 // MARK: Warp
 extension WindowManager {
+    /// The IDs of this screen's active windows on its current Space (not floating, not hidden), in window order.
+    private func activeWindowIDs(on screen: Screen) -> [Window.WindowID] {
+        return windows.windowSet(forActiveWindowsOnScreen: screen).windows.map(\.id)
+    }
+
     /**
      Warps the window toward `direction` (handover §5.5): it joins the neighbour's pane, or swaps where that's the rule.
 
@@ -1620,7 +1559,7 @@ extension WindowManager {
     }
 
     private func warp(_ window: Window, toward direction: Direction, in layout: PaneCountedLayout<Window>, on screen: Screen) {
-        let windowIDs = windows.windowSet(forActiveWindowsOnScreen: screen).windows.map(\.id)
+        let windowIDs = activeWindowIDs(on: screen)
         guard let index = windowIDs.firstIndex(of: window.id()) else {
             return
         }
@@ -1654,7 +1593,7 @@ extension WindowManager {
             return
         }
 
-        let windowIDs = windows.windowSet(forActiveWindowsOnScreen: screen).windows.map(\.id)
+        let windowIDs = activeWindowIDs(on: screen)
         let order: [Window.WindowID]
         if let bspLayout = layout as? BinarySpacePartitioningLayout<Window> {
             guard bspLayout.flip(axis, in: screen.adjustedFrame()) else {
@@ -1698,7 +1637,7 @@ extension WindowManager {
             return
         }
 
-        let windowIDs = windows.windowSet(forActiveWindowsOnScreen: screen).windows.map(\.id)
+        let windowIDs = activeWindowIDs(on: screen)
         let before = middle.paneCounts
         guard let swap = middle.sideSwap(of: windowIDs) else {
             return
@@ -1725,7 +1664,7 @@ extension WindowManager {
             return
         }
 
-        let windowIDs = windows.windowSet(forActiveWindowsOnScreen: screen).windows.map(\.id)
+        let windowIDs = activeWindowIDs(on: screen)
         guard let index = windowIDs.firstIndex(of: window.id()) else {
             return
         }

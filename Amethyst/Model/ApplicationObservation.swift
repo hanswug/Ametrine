@@ -95,9 +95,6 @@ struct ApplicationObservation<Delegate: ApplicationObservationDelegate> {
 
     /// Errors when attempting to add observers to applications
     enum Error: Swift.Error {
-        /// General failure
-        case failed
-
         /// Failure in the accessibility observation
         case observationFailed(error: Int32)
     }
@@ -226,21 +223,6 @@ struct ApplicationObservation<Delegate: ApplicationObservationDelegate> {
         }
     }
 
-    /**
-     - Returns:
-     An observable that unsubscribes from events that may be tracked for a specific window.
-
-     - Parameters:
-        - window: the window on which notifications may be observed.
-     
-     - Note:
-     This is a no op in the case where no notifications were being observed.
-     */
-    func removeObserversForWindow(_ window: Window) {
-        let notifications = Notification.windowNotificationsForWindow(window)
-        removeObservers(notifications: notifications, for: window)
-    }
-
     private func _addObservers(notifications: [Notification]) -> Observable<Void> {
         return Observable.from(notifications)
             .scan([]) { observed, notification -> [Notification] in
@@ -308,17 +290,6 @@ struct ApplicationObservation<Delegate: ApplicationObservationDelegate> {
      */
     private func removeObservers(notifications: [Notification]) {
         notifications.forEach { application.unobserve(notification: $0.string) }
-    }
-
-    /**
-     Removes notifications from being observed for a window.
-     
-     - Parameters:
-        - notifications: the notifications to stop observing.
-        - window: the window for which notifications were being observed.
-     */
-    private func removeObservers(notifications: [Notification], for window: Window) {
-        notifications.forEach { application.unobserve(notification: $0.string, window: window) }
     }
 
     private func handle(notification: Notification, window: Window) {

@@ -230,6 +230,69 @@ class ScreenManagerTests: QuickSpec {
                 }
             }
         }
+        describe("the menu bar's counts") {
+            it("shows a filled dot per window in main and an open one per free place") {
+                expect(MenuBarCounts.text(main: 1, maximum: 2, stack: nil)).to(equal("M:●○"))
+                expect(MenuBarCounts.text(main: 2, maximum: 2, stack: nil)).to(equal("M:●●"))
+                expect(MenuBarCounts.text(main: 1, maximum: 1, stack: nil)).to(equal("M:●"))
+                expect(MenuBarCounts.text(main: 2, maximum: 3, stack: nil)).to(equal("M:●●○"))
+            }
+
+            it("shows only open places on an empty Space") {
+                expect(MenuBarCounts.text(main: 0, maximum: 1, stack: nil)).to(equal("M:○"))
+            }
+
+            it("switches to digits above three places") {
+                expect(MenuBarCounts.text(main: 3, maximum: 3, stack: nil)).to(equal("M:●●●"))
+                expect(MenuBarCounts.text(main: 2, maximum: 4, stack: nil)).to(equal("M:2/4"))
+                expect(MenuBarCounts.text(main: 5, maximum: 7, stack: nil)).to(equal("M:5/7"))
+            }
+
+            it("never shows main holding more than its maximum") {
+                expect(MenuBarCounts.text(main: 3, maximum: 2, stack: nil)).to(equal("M:●●"))
+                expect(MenuBarCounts.text(main: 6, maximum: 4, stack: nil)).to(equal("M:4/4"))
+            }
+
+            it("shows nothing for a layout with neither a main pane nor a stack") {
+                expect(MenuBarCounts.text(main: 0, maximum: nil, stack: nil)).to(beNil())
+            }
+
+            it("adds the stack's size for a layout that stacks, the front window included") {
+                expect(MenuBarCounts.text(main: 0, maximum: nil, stack: 4)).to(equal("S:4"))
+                expect(MenuBarCounts.text(main: 0, maximum: nil, stack: 0)).to(equal("S:0"))
+                expect(MenuBarCounts.text(main: 1, maximum: 1, stack: 4)).to(equal("M:● S:4"))
+                expect(MenuBarCounts.text(main: 1, maximum: 1, stack: 0)).to(equal("M:● S:0"))
+                expect(MenuBarCounts.text(main: 5, maximum: 7, stack: 2)).to(equal("M:5/7 S:2"))
+            }
+
+            it("sets the counts apart from the layout name, and leaves the name alone without counts") {
+                expect(MenuBarCounts.title(counts: "M:●○", layoutName: "Tall Left")).to(equal(" M:●○ | Tall Left"))
+                expect(MenuBarCounts.title(counts: "S:4", layoutName: "Fullscreen")).to(equal(" S:4 | Fullscreen"))
+                expect(MenuBarCounts.title(counts: nil, layoutName: "BSP")).to(equal(" BSP"))
+            }
+
+            it("counts Fullscreen's every window and Two Pane's windows outside main") {
+                expect(FullscreenLayout<TestWindow>().stackCount(windowCount: 4)).to(equal(4))
+                expect(FullscreenLayout<TestWindow>().stackCount(windowCount: 0)).to(equal(0))
+                expect(TwoPaneLayout<TestWindow>().stackCount(windowCount: 5)).to(equal(4))
+                expect(TwoPaneLayout<TestWindow>().stackCount(windowCount: 1)).to(equal(0))
+                expect(TwoPaneRightLayout<TestWindow>().stackCount(windowCount: 3)).to(equal(2))
+                expect(TwoPaneLayout<TestWindow>().stackCount(windowCount: 0)).to(equal(0))
+            }
+
+            it("leaves layouts that show every window out of the stack count") {
+                expect(TallLayout<TestWindow>() as Any is StackingLayout).to(beFalse())
+                expect(ThreeColumnLeftLayout<TestWindow>() as Any is StackingLayout).to(beFalse())
+            }
+
+            it("is on by default") {
+                let path = Bundle.main.path(forResource: "default", ofType: "amethyst")
+                let data = path.flatMap { FileManager.default.contents(atPath: $0) }
+                let defaults = data.flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] }
+                expect(defaults?["menu-bar-counts"] as? Bool).to(beTrue())
+            }
+        }
+
         describe("windows leaving and coming back into view") {
             // Main count 3: left 1, main 3, right 1 in list order main | left | right.
             let previous = ["m1", "m2", "m3", "left", "right"]

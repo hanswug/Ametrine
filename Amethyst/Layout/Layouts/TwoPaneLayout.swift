@@ -8,7 +8,7 @@
 
 import Silica
 
-class TwoPaneLayout<Window: WindowType>: Layout<Window>, PanedLayout {
+class TwoPaneLayout<Window: WindowType>: Layout<Window>, PanedLayout, StackingLayout {
     override class var layoutName: String { return "Two Pane A" }
     override class var layoutKey: String { return "two-pane-a" }
 
@@ -55,6 +55,11 @@ class TwoPaneLayout<Window: WindowType>: Layout<Window>, PanedLayout {
     func increaseMainPaneCount() {}
 
     func decreaseMainPaneCount() {}
+
+    /// The secondary pane: every window outside main.
+    func stackCount(windowCount: Int) -> Int {
+        return windowCount - min(windowCount, mainPaneCount)
+    }
 
     override func frameAssignments(_ windowSet: WindowSet<Window>, on screen: Screen) -> [FrameAssignmentOperation<Window>]? {
         let windows = windowSet.windows

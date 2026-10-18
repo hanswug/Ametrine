@@ -69,6 +69,41 @@ struct VisibleWindowChange<ID: Hashable> {
     }
 }
 
+/// The counts before the layout name in the menu bar (Hans, 2026-10-18), for what the layout itself doesn't show,
+/// set apart from the name by `|`.
+///
+/// Main: `M:` and one dot per place in main, filled for a window, open for room, so `M:●○` says the next window can
+/// join main. Above three places it's digits (`M:5/7`).
+/// Stack: `S:` and every window in the pane that stacks, the one in front included (Fullscreen, Two Pane), `S:0` when
+/// empty.
+/// A layout without a main pane has no `M`, one that doesn't stack no `S`; with neither, the title is just the name.
+enum MenuBarCounts {
+    static let maxDots = 3
+
+    /// - Parameters:
+    ///   - main: How many windows main holds.
+    ///   - maximum: How many windows main can hold, or `nil` for a layout without a main pane.
+    ///   - stack: How many windows the stacking pane holds, or `nil` for a layout that doesn't stack.
+    /// - Returns: The counts, or `nil` when the layout has neither.
+    static func text(main: Int, maximum: Int?, stack: Int?) -> String? {
+        let parts = [maximum.map { mainText(main: main, maximum: $0) }, stack.map { "S:\(max(0, $0))" }].compactMap { $0 }
+        return parts.isEmpty ? nil : parts.joined(separator: " ")
+    }
+
+    /// The menu bar title: the counts, if any, then `|` and the layout's name.
+    static func title(counts: String?, layoutName: String) -> String {
+        return " " + [counts, layoutName].compactMap { $0 }.joined(separator: " | ")
+    }
+
+    private static func mainText(main: Int, maximum: Int) -> String {
+        let held = min(max(0, main), maximum)
+        guard maximum <= maxDots else {
+            return "M:\(held)/\(maximum)"
+        }
+        return "M:" + String(repeating: "●", count: held) + String(repeating: "○", count: maximum - held)
+    }
+}
+
 final class ScreenManager<Delegate: ScreenManagerDelegate>: NSObject, Codable {
     typealias Window = Delegate.Window
     typealias Screen = Window.Screen
@@ -97,6 +132,8 @@ final class ScreenManager<Delegate: ScreenManagerDelegate>: NSObject, Codable {
         let layoutKey: String
     }
     private var previousPasses: [String: PreviousPass] = [:]
+    /// The counts last announced with `menuBarCountsDidChange`.
+    private var announcedMenuBarCounts: String?
     private let userConfiguration: UserConfiguration
 
     /// The tiles windows on this screen refuse (stay bigger than), so each is reported once per tile size.
@@ -446,6 +483,7 @@ final class ScreenManager<Delegate: ScreenManagerDelegate>: NSObject, Codable {
         let mainCount = (layout as? PaneCountedLayout<Window>)?.paneCounts.main
             ?? (layout as? PanedLayout).map { min($0.mainPaneCount, windowIDs.count) } ?? 0
         previousPasses[spaceUUID] = PreviousPass(windowIDs: windowIDs, mainCount: mainCount, layoutKey: layout.layoutKey)
+        announceMenuBarCountsIfChanged()
 
         lastAssignedFrames = Dictionary(
             frameAssignments.map { ($0.frameAssignment.window.id, $0.frameAssignment.frame) },
@@ -739,6 +777,31 @@ final class ScreenManager<Delegate: ScreenManagerDelegate>: NSObject, Codable {
         displayCustomHUD(title: currentLayoutName, description: currentLayoutDescription)
     }
 
+    /// The menu bar's counts for the current layout, from the last layout pass on this Space. Until the new layout's
+    /// first pass, main is estimated from that pass's windows.
+    var menuBarCounts: String? {
+        let layout = currentLayout
+        let panedLayout = layout as? PanedLayout
+        let pass = space.flatMap { previousPasses[$0.uuid] }
+        let windowCount = pass?.windowIDs.count ?? 0
+        let stack = (layout as? StackingLayout)?.stackCount(windowCount: windowCount)
+        guard let maximum = panedLayout?.mainPaneCount else {
+            return MenuBarCounts.text(main: 0, maximum: nil, stack: stack)
+        }
+        // A layout without windows keeps its last pane sizes, so main is capped by the windows there are.
+        let main = pass.map { $0.layoutKey == layout?.layoutKey ? $0.mainCount : maximum } ?? 0
+        return MenuBarCounts.text(main: min(main, windowCount), maximum: maximum, stack: stack)
+    }
+
+    private func announceMenuBarCountsIfChanged() {
+        let counts = menuBarCounts
+        guard counts != announcedMenuBarCounts else {
+            return
+        }
+        announcedMenuBarCounts = counts
+        NotificationCenter.default.post(name: .menuBarCountsDidChange, object: self)
+    }
+
     /// Shows the current layout's main pane count. Only paned layouts have one.
     func displayMainPaneCountHUD() {
         guard userConfiguration.enablesLayoutHUD(), let panedLayout = currentLayout as? PanedLayout else {
@@ -837,4 +900,6 @@ extension ScreenManager: Comparable {
 extension Notification.Name {
     /// Posted on the main queue when a screen's current layout changes: cycled, selected, or restored on a space change.
     static let currentLayoutDidChange = Notification.Name("AmethystCurrentLayoutDidChange")
+    /// Posted on the main queue when a layout pass changes a screen's menu bar counts (`ScreenManager.menuBarCounts`).
+    static let menuBarCountsDidChange = Notification.Name("AmetrineMenuBarCountsDidChange")
 }

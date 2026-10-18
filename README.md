@@ -2,6 +2,8 @@
 
 A tiling window manager for macOS, designed around the **main pane**: the window you're working in gets the big tile, and everything else lines up beside it.
 
+**Layouts from real work, not a tiling rabbit hole.** Tiling can turn into a hobby: trees to rebalance, split ratios to tune, a rule for every app. Ametrine skips that. Each layout is a way of working you already know: one thing in focus with references beside it (Tall), many windows around a centre (3Column Middle), two side by side or one at a time on a laptop (Two Pane, Fullscreen). Pick the 3 or 4 that match how you work, learn them, and get on with your day. They stay readable because they stay realistic: around 8 windows is as many as most people keep track of, and a window limit can float or minimise the ones past it.
+
 **Move what you see, in the direction you see it.** h/j/k/l focuses the window to the west, south, north or east (or the arrow keys, if Vim keys aren't yours); with another modifier the focused window swaps or warps there. What's on your left is one key to the left: no clockwise order to keep in your head, no Alt-Tab.
 
 **See the layout's state instead of guessing it.** The menu bar shows the layout and what it can't show by itself: `M:●○ | Tall Left` is one window in main and room for the next, `S:4 | Fullscreen` is four windows in the stack. And any window can tell you why it tiles or floats.
@@ -32,7 +34,7 @@ Ametrine is built on [Amethyst](https://github.com/ianyh/Amethyst) by Ian Ynda-H
 - **Keyboard first.** Every command can have a key, and the palette shows them all while you build the muscle memory.
 - **No hidden state.** A window is either visible or deliberately gone; nothing is parked where you have to remember it.
 - **Workflows, not mechanics.** Features exist for a way of working, not to show off a tiling algorithm. BSP is there, but main is the centre.
-- **Realistic.** A screen holds the windows you can work with. More is a sign to close or float something: the window limit and the counts in the menu bar help you see when that happens.
+- **Realistic.** A handful of layouts you actually use beats every possible arrangement, and a screen holds the windows you can work with. More is a sign to close or float something: a window limit can float or minimise the windows past it, and the counts in the menu bar show how full main and the stacks are.
 - **No tricks.** Ametrine does what macOS allows: no System Integrity Protection changes, nothing injected into the Dock or other apps. Where macOS has no public API that works, Ametrine uses private calls the way other window managers do, for three things only: reading what the public API doesn't tell (which Space a window is on, a window's shape and moves for the focus border), drawing its own windows (the border), and focusing the window you asked for.
 - **Not an all-in-one.** Ametrine tiles, and leaves the rest to apps that do it well. Each display and each Space is tiled on its own, with no commands to move windows between them (macOS has no public API for moving a window to another Space), and free-floating windows are placed by a window mover such as Raycast.
 

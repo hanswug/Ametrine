@@ -6,7 +6,7 @@
 //  Copyright © 2021 Ian Ynda-Hummel. All rights reserved.
 //
 
-@testable import Amethyst
+@testable import Ametrine
 import Nimble
 import Quick
 import Silica

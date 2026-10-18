@@ -8,7 +8,7 @@
 # results independent of this Mac's setup. Debug has its own bundle ID, so the
 # installed Release app's preferences are never touched.
 #
-# Extra arguments go to xcodebuild, e.g. -only-testing:AmethystTests/TallLayoutTests
+# Extra arguments go to xcodebuild, e.g. -only-testing:AmetrineTests/TallLayoutTests
 
 set -euo pipefail
 

@@ -13,7 +13,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hasShadow="NO" releasedWhenClosed="NO" animationBehavior="default" id="1" customClass="LayoutNameWindow" customModule="Amethyst" customModuleProvider="target">
+        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hasShadow="NO" releasedWhenClosed="NO" animationBehavior="default" id="1" customClass="LayoutNameWindow" customModule="Ametrine" customModuleProvider="target">
             <windowStyleMask key="styleMask" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="285" height="64"/>
@@ -33,7 +33,7 @@
                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rF1-PP-zpf">
                         <rect key="frame" x="8" y="33" width="17" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="amethyst" id="Iyr-W5-Usa"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="ametrine" id="Iyr-W5-Usa"/>
                     </imageView>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UBl-Tk-jEi" userLabel="Layout Description Field">
                         <rect key="frame" x="-2" y="4" width="289" height="14"/>
@@ -71,6 +71,6 @@
         <userDefaultsController representsSharedInstance="YES" id="UXh-pR-GPs"/>
     </objects>
     <resources>
-        <image name="amethyst" width="32" height="32"/>
+        <image name="ametrine" width="32" height="32"/>
     </resources>
 </document>

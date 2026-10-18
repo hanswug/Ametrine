@@ -66,7 +66,7 @@
             </items>
             <point key="canvasLocation" x="-179" y="92"/>
         </menu>
-        <customObject id="494" customClass="AppDelegate" customModule="Amethyst" customModuleProvider="target">
+        <customObject id="494" customClass="AppDelegate" customModule="Ametrine" customModuleProvider="target">
             <connections>
                 <outlet property="startAtLoginMenuItem" destination="549" id="551"/>
                 <outlet property="statusItemMenu" destination="536" id="547"/>

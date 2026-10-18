@@ -14,38 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "112751D77191BEF32260D8AB1BBBB8F6"
-               BuildableName = "Pods_Amethyst.framework"
-               BlueprintName = "Pods-Amethyst"
-               ReferencedContainer = "container:Pods/Pods.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "402DB6DD1742E41A00D1C936"
-               BuildableName = "Amethyst.app"
-               BlueprintName = "Amethyst"
+               BuildableName = "Ametrine.app"
+               BlueprintName = "Ametrine"
                ReferencedContainer = "container:Ametrine.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "27D37F8A877E0F46B8656E1A4E38A5F7"
-               BuildableName = "Pods_AmethystTests.framework"
-               BlueprintName = "Pods-AmethystTests"
-               ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -68,8 +40,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "40D95B461C6E2ED800AAF433"
-               BuildableName = "AmethystTests.xctest"
-               BlueprintName = "AmethystTests"
+               BuildableName = "AmetrineTests.xctest"
+               BlueprintName = "AmetrineTests"
                ReferencedContainer = "container:Ametrine.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -90,8 +62,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "402DB6DD1742E41A00D1C936"
-            BuildableName = "Amethyst.app"
-            BlueprintName = "Amethyst"
+            BuildableName = "Ametrine.app"
+            BlueprintName = "Ametrine"
             ReferencedContainer = "container:Ametrine.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -107,8 +79,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "402DB6DD1742E41A00D1C936"
-            BuildableName = "Amethyst.app"
-            BlueprintName = "Amethyst"
+            BuildableName = "Ametrine.app"
+            BlueprintName = "Ametrine"
             ReferencedContainer = "container:Ametrine.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

@@ -16,7 +16,7 @@
     "targetForVariableExpansion" : {
       "containerPath" : "container:Ametrine.xcodeproj",
       "identifier" : "402DB6DD1742E41A00D1C936",
-      "name" : "Amethyst"
+      "name" : "Ametrine"
     }
   },
   "testTargets" : [
@@ -24,7 +24,7 @@
       "target" : {
         "containerPath" : "container:Ametrine.xcodeproj",
         "identifier" : "40D95B461C6E2ED800AAF433",
-        "name" : "AmethystTests"
+        "name" : "AmetrineTests"
       }
     }
   ],

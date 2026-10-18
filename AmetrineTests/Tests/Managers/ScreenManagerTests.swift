@@ -6,7 +6,7 @@
 //  Copyright © 2020 Ian Ynda-Hummel. All rights reserved.
 //
 
-@testable import Amethyst
+@testable import Ametrine
 import Nimble
 import Quick
 import Silica
@@ -286,7 +286,7 @@ class ScreenManagerTests: QuickSpec {
             }
 
             it("is on by default") {
-                let path = Bundle.main.path(forResource: "default", ofType: "amethyst")
+                let path = Bundle.main.path(forResource: "default", ofType: "ametrine")
                 let data = path.flatMap { FileManager.default.contents(atPath: $0) }
                 let defaults = data.flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] }
                 expect(defaults?["menu-bar-counts"] as? Bool).to(beTrue())

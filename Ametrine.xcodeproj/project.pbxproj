@@ -108,7 +108,7 @@
 		40D491D823367590007E0CCB /* RowLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D491D723367590007E0CCB /* RowLayoutTests.swift */; };
 		40D491DB23367630007E0CCB /* FrameAssignmentVerification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D491DA23367630007E0CCB /* FrameAssignmentVerification.swift */; };
 		40E2D2302D544F1E00D16B87 /* Silica in Frameworks */ = {isa = PBXBuildFile; productRef = 40E2D22F2D544F1E00D16B87 /* Silica */; };
-		40E705D8176EAD7800850DA6 /* default.amethyst in Resources */ = {isa = PBXBuildFile; fileRef = 40E705D7176EAD7800850DA6 /* default.amethyst */; };
+		40E705D8176EAD7800850DA6 /* default.ametrine in Resources */ = {isa = PBXBuildFile; fileRef = 40E705D7176EAD7800850DA6 /* default.ametrine */; };
 		40EC47F423F3A30100048B4F /* ScreenManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40EC47F323F3A30100048B4F /* ScreenManagerTests.swift */; };
 		A3E1C0DE5EC0000000000002 /* SecondaryWindowAnchorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E1C0DE5EC0000000000001 /* SecondaryWindowAnchorsTests.swift */; };
 		A3E1C0DE5EC0000000000048 /* DirectionalNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E1C0DE5EC0000000000047 /* DirectionalNavigationTests.swift */; };
@@ -132,7 +132,7 @@
 			containerPortal = 402DB6D61742E41A00D1C936 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 402DB6DD1742E41A00D1C936;
-			remoteInfo = Amethyst;
+			remoteInfo = Ametrine;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -179,7 +179,7 @@
 		A3E1C0DE5EC0000000000049 /* FocusBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusBorder.swift; sourceTree = "<group>"; };
 		A3E1C0DE5EC0000000000051 /* WindowServerBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowServerBorder.swift; sourceTree = "<group>"; };
 		4029C4F01C112478001E4788 /* Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
-		402DB6DE1742E41A00D1C936 /* Amethyst.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Amethyst.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		402DB6DE1742E41A00D1C936 /* Ametrine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ametrine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		402DB6E11742E41A00D1C936 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		402DB6E41742E41A00D1C936 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		402DB6E61742E41A00D1C936 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -233,9 +233,9 @@
 		40CF37C529BACD1800CDB07A /* AppsInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsInfo.swift; sourceTree = "<group>"; };
 		40D491D723367590007E0CCB /* RowLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowLayoutTests.swift; sourceTree = "<group>"; };
 		40D491DA23367630007E0CCB /* FrameAssignmentVerification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameAssignmentVerification.swift; sourceTree = "<group>"; };
-		40D95B471C6E2ED800AAF433 /* AmethystTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AmethystTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		40D95B471C6E2ED800AAF433 /* AmetrineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AmetrineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		40D95B4B1C6E2ED800AAF433 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		40E705D7176EAD7800850DA6 /* default.amethyst */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = default.amethyst; sourceTree = "<group>"; };
+		40E705D7176EAD7800850DA6 /* default.ametrine */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = default.ametrine; sourceTree = "<group>"; };
 		40EC47F323F3A30100048B4F /* ScreenManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenManagerTests.swift; sourceTree = "<group>"; };
 		A3E1C0DE5EC0000000000001 /* SecondaryWindowAnchorsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryWindowAnchorsTests.swift; sourceTree = "<group>"; };
 		A3E1C0DE5EC0000000000047 /* DirectionalNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionalNavigationTests.swift; sourceTree = "<group>"; };
@@ -362,8 +362,8 @@
 		402DB6D51742E41A00D1C936 = {
 			isa = PBXGroup;
 			children = (
-				402DB6E71742E41A00D1C936 /* Amethyst */,
-				40D95B481C6E2ED800AAF433 /* AmethystTests */,
+				402DB6E71742E41A00D1C936 /* Ametrine */,
+				40D95B481C6E2ED800AAF433 /* AmetrineTests */,
 				402DB6E01742E41A00D1C936 /* Frameworks */,
 				402DB6DF1742E41A00D1C936 /* Products */,
 			);
@@ -373,8 +373,8 @@
 		402DB6DF1742E41A00D1C936 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				402DB6DE1742E41A00D1C936 /* Amethyst.app */,
-				40D95B471C6E2ED800AAF433 /* AmethystTests.xctest */,
+				402DB6DE1742E41A00D1C936 /* Ametrine.app */,
+				40D95B471C6E2ED800AAF433 /* AmetrineTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -404,7 +404,7 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		402DB6E71742E41A00D1C936 /* Amethyst */ = {
+		402DB6E71742E41A00D1C936 /* Ametrine */ = {
 			isa = PBXGroup;
 			children = (
 				4076368C2394BFB500308336 /* AmetrineDebug.entitlements */,
@@ -430,7 +430,7 @@
 				401BC8A91CE8F49200F89B3F /* Ametrine-Bridging-Header.h */,
 				402DB6E91742E41A00D1C936 /* Ametrine-Info.plist */,
 				402DB6EA1742E41A00D1C936 /* InfoPlist.strings */,
-				40E705D7176EAD7800850DA6 /* default.amethyst */,
+				40E705D7176EAD7800850DA6 /* default.ametrine */,
 				40A87FDB2404AEAD005EE9C6 /* main.swift */,
 			);
 			name = "Supporting Files";
@@ -569,7 +569,7 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		40D95B481C6E2ED800AAF433 /* AmethystTests */ = {
+		40D95B481C6E2ED800AAF433 /* AmetrineTests */ = {
 			isa = PBXGroup;
 			children = (
 				40D491D9233675E3007E0CCB /* Helpers */,
@@ -584,9 +584,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		402DB6DD1742E41A00D1C936 /* Amethyst */ = {
+		402DB6DD1742E41A00D1C936 /* Ametrine */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 402DB6FB1742E41A00D1C936 /* Build configuration list for PBXNativeTarget "Amethyst" */;
+			buildConfigurationList = 402DB6FB1742E41A00D1C936 /* Build configuration list for PBXNativeTarget "Ametrine" */;
 			buildPhases = (
 				4058C4701C4C4F9E00B19D26 /* Lint */,
 				402DB6DA1742E41A00D1C936 /* Sources */,
@@ -597,7 +597,7 @@
 			);
 			dependencies = (
 			);
-			name = Amethyst;
+			name = Ametrine;
 			packageProductDependencies = (
 				40CF37BF29B440A100CDB07A /* ArgumentParser */,
 				400D48F62A92AF9B0082750F /* LoginServiceKit */,
@@ -612,13 +612,13 @@
 				402DA3D62F53DCDB00B08CA2 /* Silica */,
 				402DA3D92F53DCFE00B08CA2 /* Silica */,
 			);
-			productName = Amethyst;
-			productReference = 402DB6DE1742E41A00D1C936 /* Amethyst.app */;
+			productName = Ametrine;
+			productReference = 402DB6DE1742E41A00D1C936 /* Ametrine.app */;
 			productType = "com.apple.product-type.application";
 		};
-		40D95B461C6E2ED800AAF433 /* AmethystTests */ = {
+		40D95B461C6E2ED800AAF433 /* AmetrineTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 40D95B4E1C6E2ED800AAF433 /* Build configuration list for PBXNativeTarget "AmethystTests" */;
+			buildConfigurationList = 40D95B4E1C6E2ED800AAF433 /* Build configuration list for PBXNativeTarget "AmetrineTests" */;
 			buildPhases = (
 				40D95B431C6E2ED800AAF433 /* Sources */,
 				40D95B441C6E2ED800AAF433 /* Frameworks */,
@@ -629,13 +629,13 @@
 			dependencies = (
 				40D95B4D1C6E2ED800AAF433 /* PBXTargetDependency */,
 			);
-			name = AmethystTests;
+			name = AmetrineTests;
 			packageProductDependencies = (
 				40AE15ED2A92EBD800E14536 /* Quick */,
 				40AE15F02A92EC5300E14536 /* Nimble */,
 			);
-			productName = AmethystTests;
-			productReference = 40D95B471C6E2ED800AAF433 /* AmethystTests.xctest */;
+			productName = AmetrineTests;
+			productReference = 40D95B471C6E2ED800AAF433 /* AmetrineTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -663,7 +663,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 402DB6D91742E41A00D1C936 /* Build configuration list for PBXProject "Amethyst" */;
+			buildConfigurationList = 402DB6D91742E41A00D1C936 /* Build configuration list for PBXProject "Ametrine" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -688,8 +688,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				402DB6DD1742E41A00D1C936 /* Amethyst */,
-				40D95B461C6E2ED800AAF433 /* AmethystTests */,
+				402DB6DD1742E41A00D1C936 /* Ametrine */,
+				40D95B461C6E2ED800AAF433 /* AmetrineTests */,
 			);
 		};
 /* End PBXProject section */
@@ -703,7 +703,7 @@
 				40AF71DA20BB348300F58EA9 /* Images.xcassets in Resources */,
 				402DB6F81742E41A00D1C936 /* MainMenu.xib in Resources */,
 				40B3927C1814967F009A296B /* LayoutNameWindow.xib in Resources */,
-				40E705D8176EAD7800850DA6 /* default.amethyst in Resources */,
+				40E705D8176EAD7800850DA6 /* default.ametrine in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -844,7 +844,7 @@
 /* Begin PBXTargetDependency section */
 		40D95B4D1C6E2ED800AAF433 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 402DB6DD1742E41A00D1C936 /* Amethyst */;
+			target = 402DB6DD1742E41A00D1C936 /* Ametrine */;
 			targetProxy = 40D95B4C1C6E2ED800AAF433 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -999,7 +999,6 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Amethyst-hayuzxrdmhaqmverzffhmryaexfi/Build/Products/Debug",
 					"$(PROJECT_DIR)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 				);
@@ -1043,7 +1042,6 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Amethyst-hayuzxrdmhaqmverzffhmryaexfi/Build/Products/Debug",
 					"$(PROJECT_DIR)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 				);
@@ -1093,11 +1091,11 @@
 				MACOSX_DEPLOYMENT_TARGET = 12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.amethyst.AmethystTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ark.Ametrine.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "AmetrineTests/AmetrineTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Amethyst.app/Contents/MacOS/Amethyst";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Ametrine.app/Contents/MacOS/Ametrine";
 			};
 			name = Debug;
 		};
@@ -1126,17 +1124,17 @@
 				MACOSX_DEPLOYMENT_TARGET = 12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_SWIFT_FLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.amethyst.AmethystTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ark.Ametrine.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "AmetrineTests/AmetrineTests-Bridging-Header.h";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Amethyst.app/Contents/MacOS/Amethyst";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Ametrine.app/Contents/MacOS/Ametrine";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		402DB6D91742E41A00D1C936 /* Build configuration list for PBXProject "Amethyst" */ = {
+		402DB6D91742E41A00D1C936 /* Build configuration list for PBXProject "Ametrine" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				402DB6F91742E41A00D1C936 /* Debug */,
@@ -1145,7 +1143,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		402DB6FB1742E41A00D1C936 /* Build configuration list for PBXNativeTarget "Amethyst" */ = {
+		402DB6FB1742E41A00D1C936 /* Build configuration list for PBXNativeTarget "Ametrine" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				402DB6FC1742E41A00D1C936 /* Debug */,
@@ -1154,7 +1152,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		40D95B4E1C6E2ED800AAF433 /* Build configuration list for PBXNativeTarget "AmethystTests" */ = {
+		40D95B4E1C6E2ED800AAF433 /* Build configuration list for PBXNativeTarget "AmetrineTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				40D95B4F1C6E2ED800AAF433 /* Debug */,

@@ -5,7 +5,7 @@
 //  The shortcut sheet: your own keys at a glance (Hans, 2026-10-17).
 //
 
-@testable import Amethyst
+@testable import Ametrine
 import Nimble
 import Quick
 import Silica

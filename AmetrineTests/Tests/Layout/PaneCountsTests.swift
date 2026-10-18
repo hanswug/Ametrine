@@ -5,7 +5,7 @@
 //  Stored pane sizes and warp (handover §5.5).
 //
 
-@testable import Amethyst
+@testable import Ametrine
 import Nimble
 import Quick
 

@@ -519,7 +519,7 @@ class UserConfiguration: NSObject {
         let amethystXDGConfigPath = UserConfiguration.xdgConfigurationDirectory
         let amethystYAMLConfigPath = NSHomeDirectory().appending("/.\(configName).yml")
         let amethystJSONConfigPath = NSHomeDirectory().appending("/.\(configName)")
-        let defaultAmethystConfigPath = Bundle.main.path(forResource: "default", ofType: "amethyst")
+        let defaultAmethystConfigPath = Bundle.main.path(forResource: "default", ofType: "ametrine")
 
         var isDirectory: ObjCBool = false
         /**

@@ -3,7 +3,7 @@
 //  AmethystTests
 //
 
-@testable import Amethyst
+@testable import Ametrine
 import Foundation
 import Nimble
 import Quick

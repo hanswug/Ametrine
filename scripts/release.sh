@@ -29,7 +29,7 @@ OLD_TAG_PREFIX="hw-"
 PROJECT_FILE="Ametrine.xcodeproj/project.pbxproj"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PRODUCT="${REPO_ROOT}/build/DerivedData/Build/Products/Release/Amethyst.app"
+PRODUCT="${REPO_ROOT}/build/DerivedData/Build/Products/Release/Ametrine.app"
 STAGING="${REPO_ROOT}/build/release"
 
 cd "$REPO_ROOT"

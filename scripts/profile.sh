@@ -18,7 +18,7 @@ OUT_DIR="${REPO_ROOT}/build/profiles"
 STAMP="$(date +%Y%m%d-%H%M%S)"
 TRACE="${OUT_DIR}/amethyst-${STAMP}.trace"
 
-PID="$(pgrep -f "${APP_PATH}/Contents/MacOS/Amethyst" | head -1 || true)"
+PID="$(pgrep -f "${APP_PATH}/Contents/MacOS/Ametrine" | head -1 || true)"
 if [[ -z "$PID" ]]; then
     echo "error: ${APP_PATH} is not running." >&2
     exit 1

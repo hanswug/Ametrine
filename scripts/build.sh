@@ -18,7 +18,7 @@ DEPLOYMENT_TARGET="12.0"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DERIVED_DATA="${REPO_ROOT}/build/DerivedData"
-PRODUCT="${DERIVED_DATA}/Build/Products/Release/Amethyst.app"
+PRODUCT="${DERIVED_DATA}/Build/Products/Release/Ametrine.app"
 
 cd "$REPO_ROOT"
 

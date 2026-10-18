@@ -6,7 +6,7 @@
 //  Copyright © 2016 Ian Ynda-Hummel. All rights reserved.
 //
 
-@testable import Amethyst
+@testable import Ametrine
 import Cocoa
 import Nimble
 import Quick

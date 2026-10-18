@@ -6,7 +6,7 @@
 //  Copyright © 2019 Ian Ynda-Hummel. All rights reserved.
 //
 
-@testable import Amethyst
+@testable import Ametrine
 import Foundation
 import Nimble
 

@@ -3,7 +3,7 @@
 //  AmethystTests
 //
 
-@testable import Amethyst
+@testable import Ametrine
 import Foundation
 import Nimble
 import Quick
@@ -77,7 +77,7 @@ class RefusedTilesTests: QuickSpec {
 
         describe("configuration") {
             it("shows the HUD by default") {
-                let path = Bundle.main.path(forResource: "default", ofType: "amethyst")
+                let path = Bundle.main.path(forResource: "default", ofType: "ametrine")
                 let data = path.flatMap { FileManager.default.contents(atPath: $0) }
                 let defaults = data.flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] }
                 expect(defaults?["enables-refused-tile-hud"] as? Bool).to(beTrue())

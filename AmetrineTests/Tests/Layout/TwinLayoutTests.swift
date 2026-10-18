@@ -5,7 +5,7 @@
 //  Every twin is its original mirrored (Hans, 2026-10-17), and the layout keys.
 //
 
-@testable import Amethyst
+@testable import Ametrine
 import Nimble
 import Quick
 import Silica

@@ -123,7 +123,6 @@ enum ConfigurationKey: String {
     case focusBorderColor = "focus-border-color"
     case focusBorderGradient = "focus-border-gradient"
     case focusBorderRadius = "focus-border-radius"
-    case useCanaryBuild = "use-canary-build"
     case mainArrivalPosition = "main-arrival-position"
     case windowResizeStep = "window-resize-step"
     case screenPaddingLeft = "screen-padding-left"
@@ -897,10 +896,6 @@ class UserConfiguration: NSObject {
             color: color,
             gradient: gradient.count >= 2 ? gradient : FocusBorderAppearance.defaultGradient
         )
-    }
-
-    func useCanaryBuild() -> Bool {
-        return storage.bool(forKey: .useCanaryBuild)
     }
 
     func windowMarginSize() -> CGFloat {

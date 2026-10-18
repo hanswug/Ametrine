@@ -69,12 +69,14 @@ struct VisibleWindowChange<ID: Hashable> {
     }
 }
 
-/// The counts before the layout name in the menu bar (Hans, 2026-10-18), for what the layout itself doesn't show.
+/// The counts before the layout name in the menu bar (Hans, 2026-10-18), for what the layout itself doesn't show,
+/// set apart from the name by `|`.
 ///
 /// Main: `M:` and one dot per place in main, filled for a window, open for room, so `M:●○` says the next window can
-/// join main. Above three places it's digits (`M:5/7`); a layout without a main pane shows `M:–`.
+/// join main. Above three places it's digits (`M:5/7`).
 /// Stack: `S:` and every window in the pane that stacks, the one in front included (Fullscreen, Two Pane), `S:0` when
-/// empty; layouts that don't stack show none.
+/// empty.
+/// A layout without a main pane has no `M`, one that doesn't stack no `S`; with neither, the title is just the name.
 enum MenuBarCounts {
     static let maxDots = 3
 
@@ -82,16 +84,23 @@ enum MenuBarCounts {
     ///   - main: How many windows main holds.
     ///   - maximum: How many windows main can hold, or `nil` for a layout without a main pane.
     ///   - stack: How many windows the stacking pane holds, or `nil` for a layout that doesn't stack.
-    static func text(main: Int, maximum: Int?, stack: Int? = nil) -> String {
-        let stackText = stack.map { " S:\(max(0, $0))" } ?? ""
-        guard let maximum = maximum else {
-            return "M:–" + stackText
-        }
+    /// - Returns: The counts, or `nil` when the layout has neither.
+    static func text(main: Int, maximum: Int?, stack: Int?) -> String? {
+        let parts = [maximum.map { mainText(main: main, maximum: $0) }, stack.map { "S:\(max(0, $0))" }].compactMap { $0 }
+        return parts.isEmpty ? nil : parts.joined(separator: " ")
+    }
+
+    /// The menu bar title: the counts, if any, then `|` and the layout's name.
+    static func title(counts: String?, layoutName: String) -> String {
+        return " " + [counts, layoutName].compactMap { $0 }.joined(separator: " | ")
+    }
+
+    private static func mainText(main: Int, maximum: Int) -> String {
         let held = min(max(0, main), maximum)
         guard maximum <= maxDots else {
-            return "M:\(held)/\(maximum)" + stackText
+            return "M:\(held)/\(maximum)"
         }
-        return "M:" + String(repeating: "●", count: held) + String(repeating: "○", count: maximum - held) + stackText
+        return "M:" + String(repeating: "●", count: held) + String(repeating: "○", count: maximum - held)
     }
 }
 
@@ -770,7 +779,7 @@ final class ScreenManager<Delegate: ScreenManagerDelegate>: NSObject, Codable {
 
     /// The menu bar's counts for the current layout, from the last layout pass on this Space. Until the new layout's
     /// first pass, main is estimated from that pass's windows.
-    var menuBarCounts: String {
+    var menuBarCounts: String? {
         let layout = currentLayout
         let panedLayout = layout as? PanedLayout
         let pass = space.flatMap { previousPasses[$0.uuid] }

@@ -112,7 +112,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem?.button?.imagePosition = .imageLeft
         // Fixed-width digits, so `M:5/7` → `M:6/7` doesn't shift the layout name.
         statusItem?.button?.font = .monospacedDigitSystemFont(ofSize: NSFont.menuBarFont(ofSize: 0).pointSize, weight: .regular)
-        statusItem?.button?.title = " " + [counts, layoutName].compactMap { $0 }.joined(separator: " ")
+        statusItem?.button?.title = MenuBarCounts.title(counts: counts, layoutName: layoutName)
     }
 
     @objc func handleGetURLEvent(_ event: NSAppleEventDescriptor, withReplyEvent replyEvent: NSAppleEventDescriptor) {

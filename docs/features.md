@@ -83,7 +83,7 @@ When an app refuses its tile (its window stays bigger than the tile, because of 
 
 ## Feedback
 
-- The current layout's name next to the menu bar icon, after counts the layout itself doesn't show (`menu-bar-counts`). Main: a filled dot per window in main and an open one per free place, so `M:●○ Tall Left` says the next window can join main; above three places it's digits (`M:5/7`), and a layout without a main pane shows `M:–`. Stack, in Fullscreen and Two Pane: every window in the stack, the front one included (`M:– S:4 Fullscreen`).
+- The current layout's name next to the menu bar icon, after counts the layout itself doesn't show and a `|` (`menu-bar-counts`). Main: a filled dot per window in main and an open one per free place, so `M:●○ | Tall Left` says the next window can join main; above three places it's digits (`M:5/7`). Stack, in Fullscreen and Two Pane: every window in the stack, the front one included (`S:4 | Fullscreen`, `M:● S:4 | Two Pane A`). A layout without a main pane has no `M`; one with neither (BSP, Floating) shows just its name.
 - A short on-screen message (HUD) when the layout, padding mode, window max count or main pane count changes; main shows "x of y" (the windows it holds, of its maximum).
 - Every app switch lays the screen out again, also for apps that don't announce it through Accessibility, and quitting an app frees all its tiles.
 

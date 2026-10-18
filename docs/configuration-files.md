@@ -69,7 +69,7 @@ The first file that exists is used:
 | `restore-layouts-on-launch` | `true` to keep layouts across restarts and Reload Config (default `true`): each Space comes back on the layout it was on, with its main pane size, main pane count and column sizes, and the windows keep their places (main pane included); `swap-main` from the main window still swaps back with the window that was there before. Windows opened while Ametrine wasn't running go after them. A layout no longer in `layouts` falls back to the first one. |
 | `debug-layout-info` | `true` to add debug information to the layout HUD (default `false`). |
 | `hide-menu-bar-icon` | `true` to hide the menu bar icon, and with it the current layout's name shown next to it (default `false`). |
-| `menu-bar-counts` | Start the menu bar title with counts the layout doesn't show. Main: a filled dot per window in main, an open one per free place (`M:●○` = room for the next window), digits above three places (`M:5/7`), `M:–` without a main pane. Stack, in Fullscreen and Two Pane: every window in the stack, the front one included (`S:4`) (default `true`). |
+| `menu-bar-counts` | Start the menu bar title with counts the layout doesn't show, then `|` and the name. Main: a filled dot per window in main, an open one per free place (`M:●○` = room for the next window), digits above three places (`M:5/7`). Stack, in Fullscreen and Two Pane: every window in the stack, the front one included (`S:4`). A layout without a main pane has no `M`; one with neither shows just its name (default `true`). |
 
 ## Commands
 

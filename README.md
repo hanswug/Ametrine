@@ -3,7 +3,7 @@
 **All the tiling, none of the rabbit hole.**
 What you see is what you move.
 
-Layouts built for real productivity, not the feeling of it: your main window big, the rest beside it, and never more than you can follow, from a single window to about eight. Each layout is a way of working you already know; pick the three or four that fit you and learn them well. Focus, swap and warp any window up, down, left or right, on keys you choose, and the menu bar tells you what's going on. No trees to rebalance, no split ratios to babysit, no rule for every app. A complex config feels like progress; it isn't the work.
+**Realistic layouts, for real productivity.** Your main window big, the rest beside it, and never more than you can follow, from a single window to about eight. Each layout is a way of working you already know; pick the three or four that fit you and learn them well. Focus, swap and warp any window up, down, left or right, on keys you choose, and the menu bar tells you what's going on. No trees to rebalance, no split ratios to babysit, no rule for every app. A complex config feels like progress; it isn't the work.
 
 **Start from a real config.** Ametrine comes with mine, the one I work with every day: every setting and every key in one file, each setting with its options and default right beside it. Change what you like without going back and forth to the docs.
 

@@ -26,6 +26,7 @@
     "enables-layout-hud-on-space-change": true,
     "enables-window-count-hud": false,
     "enables-refused-tile-hud": true,
+    "menu-bar-main-count": true,
     "focus-border": false,
     "focus-border-style": "glow",
     "focus-border-width": 5,

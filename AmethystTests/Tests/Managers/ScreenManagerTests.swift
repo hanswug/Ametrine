@@ -230,6 +230,41 @@ class ScreenManagerTests: QuickSpec {
                 }
             }
         }
+        describe("the menu bar's main count") {
+            it("shows a filled dot per window in main and an open one per free place") {
+                expect(MainCountIndicator.text(main: 1, maximum: 2)).to(equal("M:●○"))
+                expect(MainCountIndicator.text(main: 2, maximum: 2)).to(equal("M:●●"))
+                expect(MainCountIndicator.text(main: 1, maximum: 1)).to(equal("M:●"))
+                expect(MainCountIndicator.text(main: 2, maximum: 3)).to(equal("M:●●○"))
+            }
+
+            it("shows only open places on an empty Space") {
+                expect(MainCountIndicator.text(main: 0, maximum: 1)).to(equal("M:○"))
+            }
+
+            it("switches to digits above three places") {
+                expect(MainCountIndicator.text(main: 3, maximum: 3)).to(equal("M:●●●"))
+                expect(MainCountIndicator.text(main: 2, maximum: 4)).to(equal("M:2/4"))
+                expect(MainCountIndicator.text(main: 5, maximum: 7)).to(equal("M:5/7"))
+            }
+
+            it("never shows main holding more than its maximum") {
+                expect(MainCountIndicator.text(main: 3, maximum: 2)).to(equal("M:●●"))
+                expect(MainCountIndicator.text(main: 6, maximum: 4)).to(equal("M:4/4"))
+            }
+
+            it("shows a dash for a layout without a main pane") {
+                expect(MainCountIndicator.text(main: 0, maximum: nil)).to(equal("M:–"))
+            }
+
+            it("is on by default") {
+                let path = Bundle.main.path(forResource: "default", ofType: "amethyst")
+                let data = path.flatMap { FileManager.default.contents(atPath: $0) }
+                let defaults = data.flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] }
+                expect(defaults?["menu-bar-main-count"] as? Bool).to(beTrue())
+            }
+        }
+
         describe("windows leaving and coming back into view") {
             // Main count 3: left 1, main 3, right 1 in list order main | left | right.
             let previous = ["m1", "m2", "m3", "left", "right"]

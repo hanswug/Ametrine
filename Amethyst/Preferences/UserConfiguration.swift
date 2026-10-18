@@ -135,6 +135,7 @@ enum ConfigurationKey: String {
     case restoreLayoutsOnLaunch = "restore-layouts-on-launch"
     case disablePaddingOnBuiltinDisplay = "disable-padding-on-builtin-display"
     case hideMenuBarIcon = "hide-menu-bar-icon"
+    case menuBarMainCount = "menu-bar-main-count"
 }
 
 extension ConfigurationKey: CaseIterable {}
@@ -1142,6 +1143,11 @@ class UserConfiguration: NSObject {
 
     func hideMenuBarIcon() -> Bool {
         return storage.bool(forKey: .hideMenuBarIcon)
+    }
+
+    /// Whether the menu bar title starts with main's count (`M:●○`).
+    func menuBarMainCount() -> Bool {
+        return storage.bool(forKey: .menuBarMainCount)
     }
 }
 

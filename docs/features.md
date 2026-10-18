@@ -83,7 +83,7 @@ When an app refuses its tile (its window stays bigger than the tile, because of 
 
 ## Feedback
 
-- The current layout's name next to the menu bar icon.
+- The current layout's name next to the menu bar icon, after main's count (`menu-bar-main-count`): a filled dot per window in main and an open one per free place, so `M:●○ Tall Left` says the next window can join main. Above three places it's digits (`M:5/7`); a layout without a main pane shows `M:–`.
 - A short on-screen message (HUD) when the layout, padding mode, window max count or main pane count changes; main shows "x of y" (the windows it holds, of its maximum).
 - Every app switch lays the screen out again, also for apps that don't announce it through Accessibility, and quitting an app frees all its tiles.
 

@@ -109,7 +109,31 @@ enum WindowDecodingError: Error {
  
  A final class is necessary for satisfying the `focusedWindow()` requirement in the `WindowType` protocol. Otherwise, as `SIWindow` is not final, the type system does not know how to constrain `Self`.
  */
-final class AXWindow: SIWindow {}
+final class AXWindow: SIWindow {
+    /// The owning process from `AXParent`, asked once: see `pid()`.
+    fileprivate let parentPID = CachedPID()
+}
+
+/**
+ A pid asked once and kept, safe to read and store from any thread (Accessibility is called from the main thread,
+ from commands and from layout passes).
+ */
+final class CachedPID: @unchecked Sendable {
+    private let lock = NSLock()
+    private var pid: pid_t?
+
+    var value: pid_t? {
+        lock.lock()
+        defer { lock.unlock() }
+        return pid
+    }
+
+    func store(_ pid: pid_t) {
+        lock.lock()
+        self.pid = pid
+        lock.unlock()
+    }
+}
 
 /**
  Identifier for `AXWindow` objects.
@@ -229,7 +253,17 @@ extension AXWindow: WindowType {
     func pid() -> pid_t {
         // Some window operations can surface elements owned by a helper process.
         // Use AXParent's PID when available so identity checks stay stable.
-        return forKey("AXParent" as CFString)?.processIdentifier() ?? processIdentifier()
+        // An element's parent can't change process, so the answer is kept: every id() needs it, and each request
+        // waits for the app (measured 2026-10-18: 57 % of a focus event, 22 ms at p95; audit P1). Without an answer
+        // the element's own pid is used, as before, and asked again next time.
+        if let pid = parentPID.value {
+            return pid
+        }
+        if let pid = forKey("AXParent" as CFString)?.processIdentifier(), pid >= 0 {
+            parentPID.store(pid)
+            return pid
+        }
+        return processIdentifier()
     }
 
     /**

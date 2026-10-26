@@ -84,6 +84,15 @@ struct FocusBorderAppearance: Equatable {
         return style == .glow ? Self.glowRingWidth : width
     }
 
+    /// What casts the glow: a band of `width` just inside the window's edge, stroked with this line width. The band itself is
+    /// never shown (nothing is drawn over the window), only its shadow, so a wider glow stays as strong as a narrow one.
+    /// The thin ring alone spread the same faint light wider: at width 10 the glow could barely be seen.
+    func glowSourcePath(windowRect: CGRect) -> CGPath {
+        let band = windowRect.insetBy(dx: width / 2, dy: width / 2)
+        let radius = max(self.radius - width / 2, 0)
+        return CGPath(roundedRect: band, cornerWidth: radius, cornerHeight: radius, transform: nil)
+    }
+
     /// The overlay's frame in Cocoa coordinates (origin bottom left) for a window frame in screen coordinates (origin top left).
     func overlayFrame(forWindowFrame windowFrame: CGRect, primaryScreenHeight: CGFloat) -> CGRect {
         let flipped = CGRect(x: windowFrame.minX, y: primaryScreenHeight - windowFrame.maxY, width: windowFrame.width, height: windowFrame.height)
@@ -213,12 +222,24 @@ final class FocusBorder {
             content = ring
         case .glow:
             let color = appearance.color.cgColor
+            let source = CAShapeLayer()
+            source.frame = bounds
+            source.path = appearance.glowSourcePath(windowRect: windowRect)
+            source.fillColor = nil
+            source.lineWidth = appearance.width
             ring.strokeColor = color
-            ring.shadowColor = color
-            ring.shadowOpacity = 0.9
-            ring.shadowRadius = appearance.width
-            ring.shadowOffset = .zero
-            content = ring
+            source.strokeColor = color
+            for layer in [source, ring] {
+                layer.shadowColor = color
+                layer.shadowOpacity = 0.9
+                layer.shadowRadius = appearance.width
+                layer.shadowOffset = .zero
+            }
+            let glow = CALayer()
+            glow.frame = bounds
+            glow.addSublayer(source)
+            glow.addSublayer(ring)
+            content = glow
         case .gradient:
             ring.strokeColor = CGColor(gray: 0, alpha: 1)
             let gradient = CAGradientLayer()

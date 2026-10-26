@@ -356,7 +356,7 @@ focus-border: true
 # glow (soft, like the macOS focus ring) | solid | gradient. Default glow.
 focus-border-style: glow
 
-# Points: the ring width for solid and gradient, how far the glow reaches (default 5).
+# Points: the ring width for solid and gradient; for glow, how far the halo reaches (the ring stays thin). Default 5.
 focus-border-width: 2
 
 # accent (the system accent colour) | "#RRGGBB" | "#AARRGGBB", quoted. Default accent.

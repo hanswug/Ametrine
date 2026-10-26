@@ -53,7 +53,7 @@ The first file that exists is used:
 | `enables-refused-tile-hud` | `true` to show a short message when a tiled window stays bigger than its tile (an app's minimum size), once per window and tile size (default `true`). |
 | `focus-border` | `true` to draw a border around the focused window (default `false`). Only windows Ametrine manages, tiled or floating; none for tiled windows in the Fullscreen layout or in native full screen. It sits just outside the window, in the margin, and never covers the window itself. |
 | `focus-border-style` | `glow` (a thin ring with a soft glow, like the macOS focus ring), `solid` or `gradient` (default `glow`). |
-| `focus-border-width` | Points: the ring width for `solid` and `gradient`, and how far the glow reaches (default `5`). |
+| `focus-border-width` | Points: the ring width for `solid` and `gradient`; for `glow`, how far the halo reaches, with the ring itself staying thin (default `5`). |
 | `focus-border-color` | `accent` (the system accent colour, following System Settings), `"#RRGGBB"` or `"#AARRGGBB"` (default `accent`). Quote hex colours in YAML. |
 | `focus-border-gradient` | The two colours of the `gradient` style, top left to bottom right (default `["#9B5DE5", "#F4B942"]`, purple to gold). |
 | `focus-border-radius` | Corner radius in points (default `12`), used when the window server doesn't report the window's own radius; normally the border follows each window's own corners. |

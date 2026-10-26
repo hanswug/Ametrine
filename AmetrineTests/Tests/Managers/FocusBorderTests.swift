@@ -120,9 +120,9 @@ class FocusBorderTests: QuickSpec {
         describe("the drawing") {
             let size = CGSize(width: 120, height: 100)
 
-            func alpha(at point: CGPoint, style: FocusBorderStyle) -> UInt8 {
+            func alpha(at point: CGPoint, style: FocusBorderStyle, width: CGFloat = 5, size: CGSize = size) -> UInt8 {
                 let appearance = FocusBorderAppearance(
-                    style: style, width: 5, radius: 12, color: .rgba(red: 1, green: 0, blue: 0, alpha: 1),
+                    style: style, width: width, radius: 12, color: .rgba(red: 1, green: 0, blue: 0, alpha: 1),
                     gradient: FocusBorderAppearance.defaultGradient
                 )
                 let context = CGContext(
@@ -145,6 +145,24 @@ class FocusBorderTests: QuickSpec {
                     expect(alpha(at: CGPoint(x: 60, y: 50), style: style)).to(equal(0), description: style.rawValue)
                     expect(alpha(at: CGPoint(x: reach + 1, y: 50), style: style)).to(equal(0), description: style.rawValue)
                 }
+            }
+
+            it("makes a wider glow reach further without fading") {
+                let large = CGSize(width: 200, height: 200)
+                // `pt` points outside the window's left edge, half way up.
+                func glow(width: CGFloat, pt: CGFloat) -> UInt8 {
+                    let reach = FocusBorderAppearance(style: .glow, width: width, radius: 12, color: .accent, gradient: []).reach
+                    return alpha(at: CGPoint(x: reach - 1 - pt, y: 100), style: .glow, width: width, size: large)
+                }
+
+                // Next to the window it's as strong at any width (the thin ring alone gave 56 at width 2, 14 at 10, 7 at 20).
+                for width: CGFloat in [2, 10, 20] {
+                    expect(glow(width: width, pt: 1)).to(beGreaterThan(70), description: "width \(width)")
+                }
+                // Further out, only a wider glow still shows.
+                expect(glow(width: 2, pt: 4)).to(beLessThan(20))
+                expect(glow(width: 10, pt: 8)).to(beGreaterThan(30))
+                expect(glow(width: 20, pt: 16)).to(beGreaterThan(30))
             }
         }
     }

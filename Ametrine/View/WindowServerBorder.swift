@@ -156,6 +156,10 @@ enum FocusBorderDrawing {
             let color = appearance.color.cgColor
             context.setShadow(offset: .zero, blur: 2 * appearance.width, color: color.copy(alpha: 0.9 * color.alpha))
             context.setStrokeColor(color)
+            context.setLineWidth(appearance.width)
+            context.addPath(appearance.glowSourcePath(windowRect: windowRect))
+            context.strokePath()
+            context.setLineWidth(appearance.ringWidth)
             context.addPath(ringPath)
             context.strokePath()
         case .gradient:

@@ -967,6 +967,29 @@ extension WindowManager {
         }
     }
 
+    /**
+     A tracked tab back in front but not active: the last tab after the one in front of it closed, when that one never
+     took its place (tabs opened faster than they're tracked). The app announces it before it's on screen and Ghostty
+     sends no focus event after, so nothing else would refresh the active windows: check once it has had time to show.
+     */
+    private func reactivateIfShown(_ window: Window) {
+        guard !windows.isWindowActive(window) else {
+            return
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + Self.pendingTabDetectionTimeout) { [weak self] in
+            guard let self, self.windows.isWindowTracked(window) else {
+                return
+            }
+            self.windows.regenerateActiveIDCache()
+            guard self.windows.isWindowActive(window), let screen = window.screen() else {
+                return
+            }
+            log.debug("Tab detection: \(window) is back in front")
+            self.markScreenForReflow(screen)
+        }
+    }
+
     private func completeTabDetection(for window: Window, on screen: Screen) {
         windows.regenerateActiveIDCache()
 
@@ -1244,6 +1267,7 @@ extension WindowManager: ApplicationObservationDelegate {
     func application(_ application: AnyApplication<Application>, didFindPotentiallyNewWindow window: Window) {
         guard !windows.isWindowTracked(window) else {
             refreshTrackedWindow(window, application: application)
+            reactivateIfShown(window)
             return
         }
 

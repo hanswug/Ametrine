@@ -31,6 +31,39 @@ class RestoredWindowOrderTests: QuickSpec {
             }
         }
 
+        describe("which tab gives way to a tab that came to the front") {
+            func givesWay(wasActive: Bool = true, onScreen: Bool, invalid: Bool = false, standard: Bool = true, recentFocus: Bool = false) -> Bool {
+                return TabCandidate.givesWay(wasActive: wasActive, isOnScreen: onScreen, isInvalid: invalid, isStandard: standard, recentFocusChange: recentFocus)
+            }
+
+            it("is a tab hidden behind the new one") {
+                expect(givesWay(onScreen: false)).to(beTrue())
+            }
+
+            it("is a closing tab still on screen, which has lost its standard subrole") {
+                // Ghostty, 2026-10-26: the tab behind is announced ~5 ms before the closing tab leaves the screen.
+                expect(givesWay(onScreen: true, standard: false)).to(beTrue())
+                expect(givesWay(onScreen: true, standard: false, recentFocus: true)).to(beTrue())
+            }
+
+            it("is a tab whose window is gone") {
+                expect(givesWay(wasActive: false, onScreen: true, invalid: true)).to(beTrue())
+            }
+
+            it("isn't a tab still on screen") {
+                expect(givesWay(onScreen: true)).to(beFalse())
+            }
+
+            it("isn't a window that was never active") {
+                expect(givesWay(wasActive: false, onScreen: false)).to(beFalse())
+                expect(givesWay(wasActive: false, onScreen: false, standard: false)).to(beFalse())
+            }
+
+            it("isn't a window off screen right after a focus change") {
+                expect(givesWay(onScreen: false, recentFocus: true)).to(beFalse())
+            }
+        }
+
         /// Adds windows the way `Windows.add` does: saved ones by their saved place, the rest at the end.
         func arrive(_ arrivals: [String], savedOrder: [String]) -> (windows: [String], order: RestoredWindowOrder<String>) {
             var order = RestoredWindowOrder(savedOrder)

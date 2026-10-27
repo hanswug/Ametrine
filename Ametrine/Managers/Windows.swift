@@ -98,6 +98,27 @@ enum TrackingOrder {
     }
 }
 
+/// Whether a tracked tab gives its place to a tab of the same app that just came to the front (`WindowManager.swapInTab`).
+enum TabCandidate {
+    /**
+     - Parameters:
+        - wasActive: the tab was active at some point, before or now.
+        - isOnScreen: the tab is on screen now.
+        - isInvalid: the tab's element has no window ID any more.
+        - isStandard: the tab still has the standard window subrole. A closing tab loses it before it leaves the screen
+          (Ghostty announces the tab behind it first), so the tab behind it would otherwise find no candidate.
+        - recentFocusChange: focus changed within the last 0.1 s, so an active tab off screen may just be another
+          window behind the one focused.
+     */
+    static func givesWay(wasActive: Bool, isOnScreen: Bool, isInvalid: Bool, isStandard: Bool, recentFocusChange: Bool) -> Bool {
+        if isInvalid || (wasActive && !isStandard) {
+            return true
+        }
+
+        return wasActive && !isOnScreen && !recentFocusChange
+    }
+}
+
 /**
  The window order saved when Ametrine quit, applied while windows arrive after a relaunch, so the main pane keeps its window.
 

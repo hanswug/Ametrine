@@ -46,6 +46,9 @@ final class WindowManager<Application: ApplicationType>: NSObject, Codable {
     /// How long after launch saved windows may still arrive in their saved place (applications answer slowly, with retries).
     private static var windowOrderRestoreTimeout: TimeInterval { 10 }
 
+    /// How long a window that might be a tab change waits for a focus event before tab detection finishes without one.
+    private static var pendingTabDetectionTimeout: TimeInterval { 0.3 }
+
     let windowTransitionCoordinator: WindowTransitionCoordinator<WindowManager<Application>>
     let focusTransitionCoordinator: FocusTransitionCoordinator<WindowManager<Application>>
 
@@ -895,33 +898,29 @@ extension WindowManager {
                 continue
             }
 
-            // The window needs to have been active _at some point_, but must not be currently on screen.
-            let didLeaveScreen = (isActive || windows.isWindowActive(existingWindow)) && !existingWindow.isOnScreen()
+            // Read once: a closing tab leaves the screen within milliseconds, and the rule and the log must see the same values.
+            let wasActive = isActive || windows.isWindowActive(existingWindow)
+            let isOnScreenNow = existingWindow.isOnScreen()
             let isInvalid = existingWindow.cgID() == kCGNullWindowID
+            let isStandard = existingWindow.shouldBeManaged()
+            // Too long a time ends up with quick switches triggering tabs to incorrectly swap.
+            let changeInterval = lastFocusDate.map { abs($0.timeIntervalSinceNow) }
+            let recentFocusChange = changeInterval.map { $0 < 0.1 } ?? false
 
             log.debug("""
             Considering window: \(existingWindow)
-            isActive: \(isActive), isOnScreen: \(isOnScreen), isInvalid: \(isInvalid), managed: \(existingWindow.shouldBeManaged())
-            Recomputed isActive: \(windows.isWindowActive(existingWindow)), isOnScreen: \(existingWindow.isOnScreen())
+            isActive: \(isActive), isOnScreen: \(isOnScreen), isInvalid: \(isInvalid), managed: \(isStandard)
+            Recomputed isActive: \(wasActive), isOnScreen: \(isOnScreenNow), lastFocusChange: \(changeInterval.map { "\($0)" } ?? "nil")
             """)
 
-            // The window needs to have either left the screen and therefore is being replaced
-            // or be invalid and therefore being removed and can be replaced.
-            guard didLeaveScreen || isInvalid else {
+            guard TabCandidate.givesWay(
+                wasActive: wasActive,
+                isOnScreen: isOnScreenNow,
+                isInvalid: isInvalid,
+                isStandard: isStandard,
+                recentFocusChange: recentFocusChange
+            ) else {
                 log.debug("Window candidate discarded: \(existingWindow)")
-                continue
-            }
-
-            // We have to make sure that we haven't had a focus change too recently as that could mean
-            // the window is already active, but just became focused by swapping window focus.
-            // The time is in seconds, and too long a time ends up with quick switches triggering tabs to incorrectly
-            // swap.
-            let changeInterval = lastFocusDate.flatMap { abs($0.timeIntervalSinceNow) }
-            if let changeInterval = changeInterval, abs(changeInterval) < 0.1 && !isInvalid {
-                log.debug("""
-                Window candidate discarded: \(existingWindow)
-                lastFocusChange: \(lastFocusDate?.description ?? "nil") now: \(changeInterval) isInvalid: \(isInvalid)
-                """)
                 continue
             }
 
@@ -957,6 +956,14 @@ extension WindowManager {
             completeTabDetection(for: window, on: screen)
         } else {
             pendingTabDetection[window.id()] = window
+            // Some apps send no focus event after a tab change (Ghostty): finish without one.
+            DispatchQueue.main.asyncAfter(deadline: .now() + Self.pendingTabDetectionTimeout) { [weak self] in
+                guard let self, self.pendingTabDetection.removeValue(forKey: window.id()) != nil else {
+                    return
+                }
+                log.debug("Tab detection: no focus event for \(window), finishing without one")
+                self.completeTabDetection(for: window, on: window.screen() ?? screen)
+            }
         }
     }
 
@@ -968,10 +975,13 @@ extension WindowManager {
         for existingWindow in applicationWindows {
             guard existingWindow != window else { continue }
 
-            let didLeaveScreen = windows.isWindowActive(existingWindow) && !existingWindow.isOnScreen()
-            let isInvalid = existingWindow.cgID() == kCGNullWindowID
-
-            guard didLeaveScreen || isInvalid else { continue }
+            guard TabCandidate.givesWay(
+                wasActive: windows.isWindowActive(existingWindow),
+                isOnScreen: existingWindow.isOnScreen(),
+                isInvalid: existingWindow.cgID() == kCGNullWindowID,
+                isStandard: existingWindow.shouldBeManaged(),
+                recentFocusChange: false
+            ) else { continue }
 
             log.debug("completeTabDetection: selected candidate \(existingWindow) for \(window)")
 

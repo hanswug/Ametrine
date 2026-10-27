@@ -6,6 +6,7 @@ Numbering started at 2.4.0 and was counted back to the fork's first build. Newes
 
 | Version | What |
 | ------- | ---- |
+| 6.5.7 | Native tabs (Ghostty): closing tabs down to the last one no longer leaves it untiled, and a new tab takes its window's tile reliably. A closing tab now hands its tile to the tab behind it even before it leaves the screen, and a tab or window that gets no focus event (Ghostty sends none for tab changes; windows opened in the background) is placed after 0.3 s |
 | 6.5.6 | Focus border: `focus-border-width` now sets how far the glow reaches without it fading, so a higher value gives a bigger, equally strong halo (the ring stays thin) |
 | 6.5.5 | Focus changes ask other apps far less: a window's owning process is asked once instead of on every lookup. Measured: a focus event made 2 requests instead of 27, and the time they took fell from 22 ms to 0.3 ms at the 95th percentile (it was 57 % of a focus event); commands make 1 instead of 11. Also unused code removed; behaviour unchanged |
 | 6.5.4 | Fewer requests to other apps when listing a screen's windows: windows not on screen are skipped before their Space and frame are asked for, and the focused window is looked up once per layout pass instead of once per window. Measured: the time this takes per command fell by 46 % at the 95th percentile (21.8 → 11.8 ms); behaviour unchanged |

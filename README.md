@@ -15,7 +15,7 @@ What you see is what you move.
 
 Built on [Amethyst](https://github.com/ianyh/Amethyst) by Ian Ynda-Hummel, for anything from a laptop to a 55" 4K screen; padding modes can even make a huge display behave like a smaller one.
 
-> **No public releases:** builds are self-signed, not notarised. [Build it yourself](#getting-started) in a few minutes.
+> **[Download the latest release](https://github.com/hanswug/Ametrine/releases/latest)** · macOS 12 or later, tested on macOS 27 with one display · self-signed, not notarised, so the first launch needs **Open Anyway** ([how](#getting-started)).
 
 ## Highlights
 
@@ -33,10 +33,15 @@ Built on [Amethyst](https://github.com/ianyh/Amethyst) by Ian Ynda-Hummel, for a
 
 ## Getting started
 
-1. **Signing certificate (once per Mac):** a self-signed Code Signing certificate named `Amethyst Local Signing`, made in Keychain Access ([how](docs/development.md#requirements)).
-2. **Build:** `scripts/build.sh` (needs Xcode and `brew install swiftlint`) installs `/Applications/Ametrine.app`. Grant Accessibility when asked.
-3. **Config:** copy [ametrine.sample.yml](ametrine.sample.yml) to `~/.config/ametrine/ametrine.yml`. **Edit Config…** in the menu opens it, **Reload Config** applies it.
-4. **First keys:** bind `show-command-palette` and the `focus-<direction>` keys. The palette runs the rest until you know what you use.
+1. **Download:** `Ametrine-<version>.zip` from the [latest release](https://github.com/hanswug/Ametrine/releases/latest). Unzip it and move `Ametrine.app` to Applications. Quit Amethyst or any other tiling window manager; never run two at once.
+2. **Config first:** copy [ametrine.sample.yml](ametrine.sample.yml) (also attached to each release) to `~/.config/ametrine/ametrine.yml`. Ametrine runs on its config file and won't start without one.
+   ```bash
+   mkdir -p ~/.config/ametrine && curl -fsSL https://raw.githubusercontent.com/hanswug/Ametrine/fork/main/ametrine.sample.yml -o ~/.config/ametrine/ametrine.yml
+   ```
+3. **Open it:** Ametrine is signed with my own certificate, not notarised by Apple, so macOS blocks the first launch. Go to System Settings → Privacy & Security and click **Open Anyway**. Then grant Accessibility when asked; updates keep it, since every release has the same signature.
+4. **First keys:** the sample binds the command palette to ⌃⌥P and focus to ⌃⌥ + h/j/k/l. The palette runs everything else until you know what you use. **Edit Config…** in the menu opens the file, **Reload Config** applies it.
+
+**Build it yourself** instead: make a self-signed Code Signing certificate named `Amethyst Local Signing` in Keychain Access ([how](docs/development.md#requirements)), then `scripts/build.sh` (needs Xcode and `brew install swiftlint`) builds and installs `/Applications/Ametrine.app`.
 
 Working on Ametrine itself: [development](docs/development.md).
 

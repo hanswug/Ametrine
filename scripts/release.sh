@@ -1,20 +1,22 @@
 #!/usr/bin/env bash
 #
-# Saves the current fork/main build as a draft GitHub release: a zip of
+# Publishes the current fork/main build as a GitHub release: a zip of
 # Ametrine.app signed with the local self-signed certificate (not
-# notarised). Drafts are visible only to the repository owner; this is how
-# Ametrine gets onto Hans's other Macs without building there.
+# notarised), plus the sample config. With --draft it's saved as a draft
+# instead, visible only to the repository owner (for trial builds).
 #
-# Usage: scripts/release.sh major|minor|patch|current [--dry-run]
+# Usage: scripts/release.sh major|minor|patch|current [--draft] [--dry-run]
 #
 #   major, minor, patch  bump MARKETING_VERSION (semantic versioning, with the
 #                        config file as the interface: a change that needs
 #                        config edits is major), commit and push the bump,
 #                        then release it as v<version>
 #   current              release the version as it stands (e.g. the first one)
+#   --draft              save as a draft: not public, no git tag
 #   --dry-run            print what would be released and stop
 #
-# A draft creates no git tag, so earlier releases are read through gh.
+# A published release creates its git tag; a draft doesn't, so earlier
+# releases are read through gh.
 #
 # Runs the tests, then scripts/build.sh (which also installs and relaunches
 # the app here), so the zip is exactly what runs on this Mac.
@@ -46,16 +48,18 @@ current_version() {
 }
 
 usage() {
-    echo "usage: scripts/release.sh major|minor|patch|current [--dry-run]" >&2
+    echo "usage: scripts/release.sh major|minor|patch|current [--draft] [--dry-run]" >&2
     echo "current version: $(current_version)" >&2
     exit 1
 }
 
 BUMP=""
 DRY_RUN=false
+DRAFT=false
 for argument in "$@"; do
     case "$argument" in
         major|minor|patch|current) BUMP="$argument" ;;
+        --draft) DRAFT=true ;;
         --dry-run) DRY_RUN=true ;;
         *) usage ;;
     esac
@@ -96,7 +100,7 @@ RELEASES="$(gh release list --repo "$REPO" --limit 200 --json tagName,createdAt 
     | grep -E "^(${TAG_PREFIX}[0-9]|${OLD_TAG_PREFIX})" || true)"
 
 if grep -qxF "$TAG" <<< "$RELEASES"; then
-    echo "error: ${TAG} is already released (or saved as a draft)." >&2
+    echo "error: ${TAG} is already released or saved as a draft (publish a draft with: gh release edit ${TAG} --repo ${REPO} --draft=false --latest)." >&2
     exit 1
 fi
 
@@ -111,6 +115,11 @@ fi
 echo "    version:  ${CURRENT} → ${VERSION} (${BUMP})"
 echo "    release:  ${TAG}"
 echo "    previous: ${PREVIOUS_TAG:-none}"
+if [[ "$DRAFT" == true ]]; then
+    echo "    kind:     draft (visible only to you)"
+else
+    echo "    kind:     public, tagged ${TAG}"
+fi
 if [[ "$DRY_RUN" == true ]]; then
     echo "==> Dry run: nothing changed"
     exit 0
@@ -134,6 +143,8 @@ mkdir -p "$STAGING"
 ditto "$PRODUCT" "${STAGING}/${APP_NAME}.app"
 ZIP="${STAGING}/${APP_NAME}-${VERSION}.zip"
 ditto -c -k --keepParent "${STAGING}/${APP_NAME}.app" "$ZIP"
+SAMPLE="${STAGING}/ametrine.sample.yml"
+cp ametrine.sample.yml "$SAMPLE"
 
 if [[ "$VERSION" != "$CURRENT" ]]; then
     echo "==> Committing and pushing the version bump"
@@ -154,22 +165,34 @@ cat > "$NOTES_FILE" <<EOF
 
 ${CHANGES}
 
+Every version in plain words: [CHANGELOG.md](https://github.com/${REPO}/blob/${BRANCH}/CHANGELOG.md).
+
 ## Install
 
-Signed with a self-signed certificate, not notarised, so macOS blocks the first launch.
+macOS 12 or later; tested on macOS 27 with one display.
 
-1. Unzip and move \`${APP_NAME}.app\` to /Applications. Quit upstream Amethyst if it's running; never run both at once.
-2. Open ${APP_NAME}. When macOS blocks it, go to System Settings → Privacy & Security and click **Open Anyway**.
-3. Grant Accessibility when asked. On a Mac where a differently signed ${APP_NAME} had it, remove the old entry and grant it again.
-4. The config lives at \`~/.config/ametrine/ametrine.yml\`; start from [ametrine.sample.yml](https://github.com/${REPO}/blob/${BRANCH}/ametrine.sample.yml).
+1. Unzip \`${APP_NAME}-${VERSION}.zip\` and move \`${APP_NAME}.app\` to Applications. Quit Amethyst or any other tiling window manager; never run two at once.
+2. Copy \`ametrine.sample.yml\` (attached below) to \`~/.config/ametrine/ametrine.yml\`. ${APP_NAME} runs on its config file and won't start without one.
+3. Open ${APP_NAME}. It's signed with a self-signed certificate, not notarised, so macOS blocks the first launch: go to System Settings → Privacy & Security and click **Open Anyway**.
+4. Grant Accessibility when asked. Updates keep it, since every release has the same signature.
+
+The sample binds the command palette to ⌃⌥P; it runs every command by name. More in the [README](https://github.com/${REPO}#getting-started).
 EOF
 
-echo "==> Saving draft release ${TAG}"
-URL="$(gh release create "$TAG" "$ZIP" \
+if [[ "$DRAFT" == true ]]; then
+    echo "==> Saving draft release ${TAG}"
+    KIND_FLAG="--draft"
+    KIND="draft, visible only to you"
+else
+    echo "==> Publishing release ${TAG}"
+    KIND_FLAG="--latest"
+    KIND="public"
+fi
+URL="$(gh release create "$TAG" "$ZIP" "$SAMPLE" \
     --repo "$REPO" \
-    --draft \
+    "$KIND_FLAG" \
     --target "$(git rev-parse HEAD)" \
     --title "${APP_NAME} ${VERSION}" \
     --notes-file "$NOTES_FILE")"
 
-echo "==> Done (draft, visible only to you): ${URL}"
+echo "==> Done (${KIND}): ${URL}"

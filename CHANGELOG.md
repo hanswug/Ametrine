@@ -2,7 +2,7 @@
 
 Ametrine uses [semantic versioning](https://semver.org), with the config file as its interface: a change that needs edits to an existing config is a major version, a new feature a minor one, a fix a patch. Releases are named `v<version>`; the build number (in parentheses in the menu) is the commit count. A major version's line says which config edit it needs.
 
-Numbering started at 2.4.0 and was counted back to the fork's first build. Newest first:
+Numbering started at 2.4.0 and was counted back to the fork's first build. 6.5.7 is the first public release, on [GitHub Releases](https://github.com/hanswug/Ametrine/releases); earlier versions were private builds. Newest first:
 
 | Version | What |
 | ------- | ---- |

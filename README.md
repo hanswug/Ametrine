@@ -1,6 +1,6 @@
 # Ametrine
 
-> **Ametrine is no longer developed: I've moved to [OmniWM](https://github.com/OmniNull/OmniWM)** (my fork: [hanswug/OmniWM](https://github.com/hanswug/OmniWM)). Why: speed (instant, and a workspace switch never re-tiles your windows), an active upstream that gives real feedback, and building it together with its maintainer and contributors. Ametrine still works as it is, and its releases stay available.
+> **Ametrine is no longer developed: I've moved to [OmniWM](https://github.com/OmniNull/OmniWM)** (my fork: [hanswug/OmniWM](https://github.com/hanswug/OmniWM)). Why: speed (instant, and a workspace switch never re-tiles your windows), an active upstream that gives real feedback, and a project I'm looking to contribute to. Ametrine still works as it is, and its releases stay available.
 
 **All the tiling, none of the rabbit hole.**
 What you see is what you move.

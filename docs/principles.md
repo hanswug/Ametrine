@@ -1,5 +1,7 @@
 # Design principles
 
+> **Ametrine is no longer developed: I've moved to [OmniWM](https://github.com/OmniNull/OmniWM)** (my fork: [hanswug/OmniWM](https://github.com/hanswug/OmniWM)). Why: speed (instant, and a workspace switch never re-tiles your windows), an active upstream that gives real feedback, and building it together with its maintainer and contributors. Ametrine still works as it is, and its releases stay available.
+
 What Ametrine is for, and what it deliberately isn't. Every feature is checked against these.
 
 - **Main first.** The window you work in is the centre of every layout; the others are there to be brought in.
